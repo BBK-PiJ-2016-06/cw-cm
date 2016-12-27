@@ -5,7 +5,7 @@
  * a name (not necessarily unique), and notes that the user
  * may want to save about them.
  */
-public class ContactImpl {
+public class ContactImpl implements Contact {
 
     private static int allContactIdCounter = 0;
     private int thisContactID;
