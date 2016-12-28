@@ -1,8 +1,6 @@
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -25,28 +23,28 @@ public class ContactImplShould {
     public void returnIdOf1ForContact1(){
         int result = contact1.getId();
         assertEquals(1, result);
-        result = contact2.getId();
-        assertEquals(2, result);
     }
 
-    @Test
-    public void getId() throws Exception {
-
-    }
 
     @Test
-    public void getName() throws Exception {
-
-    }
-
-    @Test
-    public void getNotes() throws Exception {
+    public void returnSteveAndMariahWhenCallingGetName() throws Exception {
+        String result =  contact1.getName();
+        assertEquals("Steve", result);
+        result = contact2.getName();
+        assertEquals("Mariah", result);
 
     }
 
     @Test
-    public void addNotes() throws Exception {
+    public void returnBlankWhenCallingGetNotes() throws Exception {
+        String result = contact1.getNotes();
+        assertEquals("", result);
+    }
 
+    @Test
+    public void returnMessageWhenCallingGetNotesAfterAddingNotes() throws Exception {
+        contact1.addNotes("Message");
+        assertEquals("Message" + "\n", contact1.getNotes());
     }
 
 
