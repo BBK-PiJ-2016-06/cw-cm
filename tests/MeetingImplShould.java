@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Set;
+import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -20,9 +21,19 @@ public class MeetingImplShould {
     private Calendar futureDate;
     private Set<Contact> contacts;
 
+    @Test
+    public void name() throws Exception {
+
+    }
+
     @Before
     public void setUp() throws Exception {
         futureDate = new GregorianCalendar(2050, 06, 06);
+        contacts = new HashSet<Contact>();
+        for ( int i = 0; i < 100; i++ ) {
+            Contact person = new ContactImpl("Name" + i);
+            contacts.add(person);
+        }
         meeting1 = new MeetingImpl(contacts, futureDate);
         meeting2 = new MeetingImpl(contacts, futureDate);
     }
@@ -47,5 +58,8 @@ public class MeetingImplShould {
         assertEquals(changedDate, meeting2.getDate());
     }
 
-    //add contacts to contacts in the @Before and work from there
+    @Test
+    public void returnASizeOf100WhenCallingGetContacts() {
+        assertEquals(100, meeting1.getContacts().size());
+    }
 }
