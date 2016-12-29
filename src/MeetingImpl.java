@@ -9,7 +9,7 @@ import java.util.Set;
  * Meetings have unique IDs, scheduled date and a list of participating contacts
  */
 
-public class MeetingImpl implements Meeting {
+public class MeetingImpl implements Meeting, FutureMeeting {
 
     private static int allMeetingIdCounter = 0;
     private int meetingId;
@@ -18,6 +18,9 @@ public class MeetingImpl implements Meeting {
 
     /**
      * Constructor for MeetingImpl
+     *
+     * @param contacts : a set of type Contact for this meeting
+     * @param date : a calendar indicating the scheduled date of the meeting
      */
     public MeetingImpl(Set<Contact> contacts, Calendar date) {
         allMeetingIdCounter++;
@@ -48,7 +51,7 @@ public class MeetingImpl implements Meeting {
     /**
      * Setter for date
      *
-     * parameter of a new date for this meeting
+     * parameter date to replace previous value for this meeting
      *
      * @param Calendar newDate
      */
