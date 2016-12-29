@@ -9,12 +9,13 @@ import java.util.Set;
  * Meetings have unique IDs, scheduled date and a list of participating contacts
  */
 
-public class MeetingImpl implements Meeting, FutureMeeting {
+public class MeetingImpl implements Meeting, FutureMeeting, PastMeeting {
 
     private static int allMeetingIdCounter = 0;
     private int meetingId;
     private Calendar date;
     private Set<Contact> participants;
+    String notes = "";
 
     /**
      * Constructor for MeetingImpl
@@ -71,5 +72,16 @@ public class MeetingImpl implements Meeting, FutureMeeting {
     public Set<Contact> getContacts() {
         return participants;
     }
+
+    /**
+     * Returns the notes from the meeting.
+     *
+     * If there are no notes, the empty string is returned.
+     *
+     * @return the notes from the meeting.
+     */
+    public String getNotes() {
+
+    };
 
 }

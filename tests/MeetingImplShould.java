@@ -18,8 +18,12 @@ public class MeetingImplShould {
 
     private Meeting meeting1;
     private MeetingImpl meeting2;
+    private PastMeeting pastMeeting;
     private Calendar futureDate;
+    private Calendar pastDate;
     private Set<Contact> contacts;
+    String notes;
+    String emptyNotes;
 
     @Test
     public void name() throws Exception {
@@ -29,6 +33,7 @@ public class MeetingImplShould {
     @Before
     public void setUp() throws Exception {
         futureDate = new GregorianCalendar(2050, 06, 06);
+        pastDate = new GregorianCalendar(2014, 02, 03);
         contacts = new HashSet<Contact>();
         for ( int i = 0; i < 100; i++ ) {
             Contact person = new ContactImpl("Name" + i);
@@ -36,6 +41,9 @@ public class MeetingImplShould {
         }
         meeting1 = new MeetingImpl(contacts, futureDate);
         meeting2 = new MeetingImpl(contacts, futureDate);
+        notes = "These are some notes";
+        emptyNotes = "";
+        pastMeeting = new MeetingImpl(contacts, pastDate);
     }
 
     @Test
@@ -61,5 +69,10 @@ public class MeetingImplShould {
     @Test
     public void returnASizeOf100WhenCallingGetContacts() {
         assertEquals(100, meeting1.getContacts().size());
+    }
+
+    @Test
+    public void returnEmptyStringWhenCallingGetNotes() {
+        assertEquals("", pastMeeting.getNotes());
     }
 }

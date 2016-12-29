@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 
 /**
@@ -12,7 +9,7 @@ import java.util.concurrent.Future;
  */
 public class ContactManagerImpl implements ContactManager{
 
-    private List<Meeting> futureMeetingList = new ArrayList<>();
+    private List<FutureMeeting> futureMeetingList = new ArrayList<>();
 
     /**
      * Add a new meeting to be held in the future.
@@ -29,12 +26,16 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-        if (date ) {
+
+      /* Need to find some way to compare the param date to current date
+       * also need to clarify what they mean by contact is unknown/ non-existant
+       if (date.before(currentDate) ) {
             throw new IllegalArgumentException("Date is in the past");
         }
-            FutureMeeting newMeeting = new MeetingImpl(contacts, date);
-            futureMeetingList.add(newMeeting);
-            return newMeeting.getId();
+      */
+        FutureMeeting newMeeting = new MeetingImpl(contacts, date);
+        futureMeetingList.add(newMeeting);
+        return newMeeting.getId();
     }
 
     @Override
