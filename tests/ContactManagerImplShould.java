@@ -15,13 +15,12 @@ import java.util.Set;
  */
 public class ContactManagerImplShould {
 
-    private ContactManagerImpl;
     private Meeting meeting1;
     private Set<Contact> contactSet1;
     private Calendar futureDate;
     private ContactManager contactManager;
     private FutureMeeting futureMeeting;
-
+    private Calendar dateInPast;
 
     @Before
     public void setUp() throws Exception {
@@ -32,11 +31,23 @@ public class ContactManagerImplShould {
             contactSet1.add(person);
         }
         contactManager = new ContactManagerImpl();
+        dateInPast = new GregorianCalendar(1969, 06, 01);
     }
 
     @Test
     public void return1WhenCallingAddFutureMeeting() {
-        assertEquals(1, contactManager.addFutureMeeting(contactSet1, futureDate))
+        assertEquals(1, contactManager.addFutureMeeting(contactSet1, futureDate));
+    }
+
+    @Test // (expected = IllegalArgumentException.class)
+    public void throwIllegalArgExceptionWhenPassingPastDate(){
+        boolean exceptionThrown = false;
+        try {
+            contactManager.addFutureMeeting(contactSet1, dateInPast);
+        } catch (IllegalArgumentException ex) {
+                exceptionThrown = true;
+            }
+        assertTrue(exceptionThrown);
     }
 
 }

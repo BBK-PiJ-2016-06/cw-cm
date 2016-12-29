@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * Created by nathanhanak on 12/28/16.
@@ -11,7 +12,8 @@ import java.util.Set;
  */
 public class ContactManagerImpl implements ContactManager{
 
-    private List<Meeting> meetingList = new ArrayList<>();
+    private List<Meeting> futureMeetingList = new ArrayList<>();
+
     /**
      * Add a new meeting to be held in the future.
      *
@@ -27,7 +29,12 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-
+        if (date ) {
+            throw new IllegalArgumentException("Date is in the past");
+        }
+            FutureMeeting newMeeting = new MeetingImpl(contacts, date);
+            futureMeetingList.add(newMeeting);
+            return newMeeting.getId();
     }
 
     @Override
