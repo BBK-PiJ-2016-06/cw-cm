@@ -34,16 +34,17 @@ public class ContactManagerImplShould {
         }
         contactManager = new ContactManagerImpl();
         dateInPast = new GregorianCalendar(1969, 06, 01);
-        pastMeeting = new MeetingImpl(contactSet1, dateInPast);
+        pastMeeting = new PastMeetingImpl(contactSet1, dateInPast, "Meeting occurred in past");
     }
 
     @Test
+    // test for addFutureMeeting(Set<Contact> , Calendar)
     public void return1WhenCallingAddFutureMeeting() {
         assertEquals(1, contactManager.addFutureMeeting(contactSet1, futureDate));
     }
 
-    @Ignore
     @Test
+    // test for addFutureMeeting(Set<Contact> , Calendar)
     public void throwIllegalArgExceptionWhenPassingPastDate(){
         boolean exceptionThrown = false;
         try {
@@ -54,7 +55,10 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
-    //Need to add test for Illegal arg exception for an unknown or non existent contact for addFutureMeeting
+    // @Test
+    // tests addFutureMeeting to see if all contacts in @param Set<Contact> are known
+    // by calling on contactIsKnown
+    //
 
     @Test
     public void returnPastMeetingByRequestedIdWhenCallingGetPastMeeting(){

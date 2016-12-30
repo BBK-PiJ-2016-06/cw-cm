@@ -9,7 +9,7 @@ import java.util.Set;
  * Meetings have unique IDs, scheduled date and a list of participating contacts
  */
 
-public class MeetingImpl implements Meeting, FutureMeeting, PastMeeting {
+public class MeetingImpl implements Meeting, FutureMeeting {
 
     private static int allMeetingIdCounter = 0;
     private int meetingId;

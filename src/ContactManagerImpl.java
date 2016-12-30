@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
  */
 public class ContactManagerImpl implements ContactManager{
 
+    private Set<Contact> allKnownContacts = new HashSet<>();
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
 
@@ -27,13 +28,9 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-
-      /* Need to find some way to compare the param date to current date
-       * also need to clarify what they mean by contact is unknown/ non-existant
-       if (date.before(currentDate) ) {
+       if (calendarOccursIn(date).equals("past")) {
             throw new IllegalArgumentException("Date is in the past");
         }
-      */
         FutureMeeting newMeeting = new MeetingImpl(contacts, date);
         futureMeetingList.add(newMeeting);
         return newMeeting.getId();
@@ -110,6 +107,36 @@ public class ContactManagerImpl implements ContactManager{
     public void flush() {
 
     }
+
+    /**
+     * Method which checks if a contact exists in allKnownContacts
+     * @throws IllegalArgumentException if not
+     * @param contact to be checked
+     */
+    /** METHOD IS BELOW
+    private boolean contactIsKnown throws IllegalArgumentException (Contact contact){
+        // refer against allKnownContacts field
+        // have it throw IllegalArgumentException if it does not
+        // need to write addNewContact method first
+    }
+    */
+
+    /**
+     * Method which returns a String indicating when in time meeting occurs
+     * by comparing against a Calendar set to the current date
+     * @param calendarToCheck a Calendar object
+     * @return String containing the result of the operation
+     */
+    private String calendarOccursIn(Calendar calendarToCheck) {
+        Calendar currentDate = Calendar.getInstance();
+        String result = "future";
+        if (calendarToCheck.compareTo(currentDate) < 0) {
+            return "past";
+        } else {
+            return result;
+        }
+    }
+
 }
 
 
