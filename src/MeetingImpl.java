@@ -15,7 +15,6 @@ public class MeetingImpl implements Meeting, FutureMeeting, PastMeeting {
     private int meetingId;
     private Calendar date;
     private Set<Contact> participants;
-    String notes = "";
 
     /**
      * Constructor for MeetingImpl
@@ -73,15 +72,7 @@ public class MeetingImpl implements Meeting, FutureMeeting, PastMeeting {
         return participants;
     }
 
-    /**
-     * Returns the notes from the meeting.
-     *
-     * If there are no notes, the empty string is returned.
-     *
-     * @return the notes from the meeting.
-     */
-    public String getNotes() {
 
-    };
+
 
 }

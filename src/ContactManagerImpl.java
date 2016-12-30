@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 public class ContactManagerImpl implements ContactManager{
 
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
+    private List<PastMeeting> pastMeetingList = new ArrayList<>();
 
     /**
      * Add a new meeting to be held in the future.
@@ -68,6 +69,18 @@ public class ContactManagerImpl implements ContactManager{
         return null;
     }
 
+    /**
+     * Create a new record for a meeting that took place in the past.
+     *
+     * @param contacts a set of participants
+     * @param date the date on which the meeting took place
+     * @param text messages to be added about the meeting.
+     * @return the ID for the meeting
+     * @throws IllegalArgumentException if the list of contacts is
+     *     empty, if any of the contacts does not exist, or if
+     *     the date provided is in the future
+     * @throws NullPointerException if any of the arguments is null
+     */
     @Override
     public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
         return 0;
