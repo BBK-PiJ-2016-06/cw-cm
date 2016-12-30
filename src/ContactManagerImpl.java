@@ -99,6 +99,9 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public int addNewContact(String name, String notes) {
+        if (name.equals("") || notes.equals("")) {
+            throw new IllegalArgumentException("Passed an empty String parameter");
+        }
         Contact newContact = new ContactImpl(name);
         newContact.addNotes(notes);
         return newContact.getId();
@@ -106,6 +109,7 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public Set<Contact> getContacts(String name) {
+
         return null;
     }
 

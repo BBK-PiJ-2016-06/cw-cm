@@ -99,14 +99,37 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
+    @Test
     /**
+     * Test to see if addNewContact throws nullPointerException when passing null String parameters
+     */
+    public void throwNullPointerExceptionWhenPassingNullStrings(){
+        boolean exceptionThrown = false;
+        String nullString = null;
+        String notNullString = "not null";
+        try{
+            contactManager.addNewContact(nullString, notNullString);
+        } catch (NullPointerException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
     @Test
     /**
      * Tests addNewContact successfully adds a contact to Set<Contact> allKnownContacts
-
+     */
     public void containsNewlyCreatedContact() {
         contactManager.addNewContact("Darth Vader", "Use the Force");
-        contactManager.
+        Set<Contact> result = contactManager.getContacts("");
+        boolean hasName = true;
+        if (result.stream()
+                    .filter(contact -> contact.getName().equals("Darth Vader"))
+                    .findFirst()
+            .equals(null) ) {
+                hasName = false;
+            }
+        assertTrue(hasName);
     }
-    */
+
 }
