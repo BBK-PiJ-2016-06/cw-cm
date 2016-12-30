@@ -38,7 +38,7 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    // test for addFutureMeeting(Set<Contact> , Calendar)
+    // tests for addFutureMeeting(Set<Contact> , Calendar)
     public void return1WhenCallingAddFutureMeeting() {
         assertEquals(1, contactManager.addFutureMeeting(contactSet1, futureDate));
     }
@@ -65,5 +65,48 @@ public class ContactManagerImplShould {
         assertEquals(pastMeeting, contactManager.getPastMeeting(1));
     }
 
+    @Test
+    /**
+     * tests to see if addnewContact(String, String) @return an int of newly created Contact
+     * Expected result is 101 because 100 contacts previously created in @Before
+     */
+    public void returnAnIntWhenCallingAddNewContact() {
+        int result = contactManager.addNewContact("Darth Vader", "I am your Father");
+        assertEquals(101 , result);
+    }
 
+    @Test
+    /**
+     * test for addNewContact
+     * Test to see if IllegalArgumentException is thrown for passing empty string @param
+      */
+    public void throwIllegalArgumentExceptionForPassingEmptyStrings() {
+        boolean exceptionThrown = false;
+        String empty = "";
+        String notEmpty = "word";
+        try {
+            contactManager.addNewContact(empty, notEmpty);
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+        exceptionThrown = false;
+        try {
+            contactManager.addNewContact(notEmpty, empty);
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    /**
+    @Test
+    /**
+     * Tests addNewContact successfully adds a contact to Set<Contact> allKnownContacts
+
+    public void containsNewlyCreatedContact() {
+        contactManager.addNewContact("Darth Vader", "Use the Force");
+        contactManager.
+    }
+    */
 }
