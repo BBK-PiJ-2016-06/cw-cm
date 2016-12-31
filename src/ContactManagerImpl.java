@@ -84,14 +84,19 @@ public class ContactManagerImpl implements ContactManager{
      * @param contacts a set of participants
      * @param date the date on which the meeting took place
      * @param text messages to be added about the meeting.
-     * @return the ID for the meeting  DONE
+     * @return the ID for the meeting
      * @throws IllegalArgumentException if the list of contacts is
-     *     empty, if any of the contacts does not exist, or if
+     *     empty DONE, if any of the contacts does not exist, or if
      *     the date provided is in the future
      * @throws NullPointerException if any of the arguments is null
      */
     @Override
     public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
+        contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
+        if (calendarOccursIn(date).equals("future") || contacts.isEmpty()) {
+            throw new IllegalArgumentException("Attempted to pass a Calendar in the future through" +
+                    "addNewPastMeeting() or contacts is empty");
+        }
         PastMeeting newPastMeeting = new PastMeetingImpl(contacts, date, text);
         return newPastMeeting.getId();
     }

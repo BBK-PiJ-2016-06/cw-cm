@@ -35,8 +35,10 @@ public class ContactManagerImplShould {
 
     @Test
     // tests addFutureMeeting(Set<Contact> , Calendar)
-    public void return3WhenCallingAddFutureMeeting() {
-        assertEquals(3, contactManager.addFutureMeeting(contactSet1, futureDate));
+    public void returnExpectedIntWhenCallingAddFutureMeeting() {
+        FutureMeeting randomMeeting = new MeetingImpl(contactSet1, futureDate);
+        int expected = randomMeeting.getId() + 1;
+        assertEquals(expected, contactManager.addFutureMeeting(contactSet1, futureDate));
     }
 
     @Test
@@ -157,13 +159,97 @@ public class ContactManagerImplShould {
         assertEquals(expected, result);
     }
 
+    @Test
     /**
+     * tests addNewPastMeeting to see if it throws IllegalArgumentException
+     * when a contact in @param Set<Contact> isn't known
+     */
+    public void throwIllegalArgumentExceptionWhenPassingUnknownContactToAddNewPastMeeting(){
+        boolean exceptionThrown = false;
+        Set<Contact> contactSetWithUnknownContact = new HashSet<>();
+        Contact unknownContact = new ContactImpl("Stranger");
+        contactSetWithUnknownContact.add(unknownContact);
+        try {
+            contactManager.addNewPastMeeting(contactSetWithUnknownContact, dateInPast, "past notes");
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    // test to make sure addNewPastMeeting DOESN'T throw an exception when all contacts are known.
+    public void notThrowExceptionWhenCallingAddNewPastMeetingAndAllContactsAreKnown() {
+        boolean exceptionThrown = false;
+        Set<Contact> knownContacts = contactManager.getContacts("");
+        try {
+            contactManager.addNewPastMeeting(knownContacts, dateInPast, "past notes");
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertFalse(exceptionThrown);
+    }
+
+    @Test
+    // test for addNewPastMeeting(Set<Contact> , Calendar, String notes)
+    public void throwIllegalArgExceptionWhenPassingFutureDateToAddNewPastMeeting(){
+        boolean exceptionThrown = false;
+        try {
+            contactManager.addNewPastMeeting(contactSet1, futureDate, "Some notes");
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    // test for addNewPastMeeting(Set<Contact> , Calendar, String notes)
+    public void throwIllegalArgExceptionWhenPassingEmptyContactSetToAddNewPastMeeting(){
+        boolean exceptionThrown = false;
+        Set<Contact> emptyContact = new HashSet<>();
+        try {
+            contactManager.addNewPastMeeting(emptyContact, futureDate, "Some notes");
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    // test for addNewPastMeeting(Set<Contact> , Calendar, String notes)
+    public void throwNullPointerExceptionIfAnyParamsForAddNewPastMeetingAreNull(){
+        boolean nullPointerThrown = false;
+        String someNotes = "here are some notes";
+        try{
+            Set<Contact> nullContactSet = null;
+            contactManager.addNewPastMeeting( nullContactSet, dateInPast, someNotes);
+        } catch (NullPointerException ex) {
+            nullPointerThrown = true;
+        }
+        assertTrue(nullPointerThrown);
+        try{
+            String nullNotes = null;
+            contactManager.addNewPastMeeting(contactSet1, dateInPast, nullNotes);
+        } catch (NullPointerException ex) {
+            nullPointerThrown = true;
+        }
+        assertTrue(nullPointerThrown);
+        try{
+            Calendar nullCalendar = null;
+            contactManager.addNewPastMeeting( contactSet1, nullCalendar, someNotes);
+        } catch (NullPointerException ex) {
+            nullPointerThrown = true;
+        }
+        assertTrue(nullPointerThrown);
+    }
+
+
     @Test
     public void returnAPastMeetingByItsIdNumber() {
         int pastMeetingId = contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
         contactManager.getPastMeeting(pastMeetingId);
         assertEquals();
     }
-    */
+
 
 }
