@@ -43,14 +43,23 @@ public class ContactManagerImpl implements ContactManager{
      * The meeting must have happened at a past date.
      *
      * @param id the ID for the meeting
-     * @return the meeting with the requested ID, or null if it there is none.
+     * @return the meeting with the requested ID , or null if it there is none.
      * @throws IllegalStateException if there is a meeting with that ID happening
      *         in the future
      */
     @Override
     public PastMeeting getPastMeeting(int id) {
-
-        return null;
+        PastMeeting meetingWithId;
+        try {
+            meetingWithId = pastMeetingList.parallelStream()
+                    .filter(pM -> pM.getId() == id)
+                    .findFirst()
+                    .get();
+        } catch (NoSuchElementException ex) {
+            System.out.println("No Past Meeting with that ID");
+            meetingWithId = null;
+        }
+        return meetingWithId;
     }
 
     @Override
@@ -98,6 +107,7 @@ public class ContactManagerImpl implements ContactManager{
                     "addNewPastMeeting() or contacts is empty");
         }
         PastMeeting newPastMeeting = new PastMeetingImpl(contacts, date, text);
+        pastMeetingList.add(newPastMeeting);
         return newPastMeeting.getId();
     }
 
