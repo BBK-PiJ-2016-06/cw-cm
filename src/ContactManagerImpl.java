@@ -104,12 +104,15 @@ public class ContactManagerImpl implements ContactManager{
         }
         Contact newContact = new ContactImpl(name);
         newContact.addNotes(notes);
+        allKnownContacts.add(newContact);
         return newContact.getId();
     }
 
     @Override
     public Set<Contact> getContacts(String name) {
-
+        if (name.equals("")) {
+            return allKnownContacts;
+        }
         return null;
     }
 
@@ -134,6 +137,7 @@ public class ContactManagerImpl implements ContactManager{
         // have it throw IllegalArgumentException if it does not
         // need to write addNewContact method first
     }
+
     */
 
     /**

@@ -3,10 +3,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -35,6 +32,7 @@ public class ContactManagerImplShould {
         contactManager = new ContactManagerImpl();
         dateInPast = new GregorianCalendar(1969, 06, 01);
         pastMeeting = new PastMeetingImpl(contactSet1, dateInPast, "Meeting occurred in past");
+        contactManager.addNewContact("Darth Vader", "Use the Force");
     }
 
     @Test
@@ -55,16 +53,6 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
-    // @Test
-    // tests addFutureMeeting to see if all contacts in @param Set<Contact> are known
-    // by calling on contactIsKnown
-    //
-
-    @Test
-    public void returnPastMeetingByRequestedIdWhenCallingGetPastMeeting(){
-        assertEquals(pastMeeting, contactManager.getPastMeeting(1));
-    }
-
     @Test
     /**
      * tests to see if addnewContact(String, String) @return an int of newly created Contact
@@ -79,7 +67,7 @@ public class ContactManagerImplShould {
     /**
      * test for addNewContact
      * Test to see if IllegalArgumentException is thrown for passing empty string @param
-      */
+     */
     public void throwIllegalArgumentExceptionForPassingEmptyStrings() {
         boolean exceptionThrown = false;
         String empty = "";
@@ -119,17 +107,28 @@ public class ContactManagerImplShould {
     /**
      * Tests addNewContact successfully adds a contact to Set<Contact> allKnownContacts
      */
-    public void containsNewlyCreatedContact() {
-        contactManager.addNewContact("Darth Vader", "Use the Force");
+    public void containsCreatedContact() {
         Set<Contact> result = contactManager.getContacts("");
-        boolean hasName = true;
-        if (result.stream()
-                    .filter(contact -> contact.getName().equals("Darth Vader"))
-                    .findFirst()
-            .equals(null) ) {
-                hasName = false;
-            }
+        boolean hasName = result.stream().anyMatch(c -> c.getName().equals("Darth Vader"));
         assertTrue(hasName);
+    }
+
+    @Test
+    /**
+     * tests addFutureMeeting to see if it throws IllegalArgumentException
+     * when a contact in @param Set<Contact> isn't known
+     */
+    public void throwIllegalArgumentExceptionWhenPassingUnknownContactToAddFutureMeeting(){
+        boolean exceptionThrown = false;
+        Set<Contact> contactSetWithUnknownContact = new HashSet<>();
+        Contact unknownContact = new ContactImpl("Stranger");
+        contactSetWithUnknownContact.add(unknownContact);
+        try {
+            contactManager.addFutureMeeting(contactSetWithUnknownContact, futureDate);
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
     }
 
 }
