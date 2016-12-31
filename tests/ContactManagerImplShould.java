@@ -131,4 +131,7 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
+    //@Test
+    // test to make sure it DOESN'T throw an exception when all contacts are known.
+
 }

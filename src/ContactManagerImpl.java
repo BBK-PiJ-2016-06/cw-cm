@@ -28,7 +28,8 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-       if (calendarOccursIn(date).equals("past")) {
+        contacts.parallelStream().forEach(contact -> contactIsKnown(contact)); // checks all Contacts are known
+        if (calendarOccursIn(date).equals("past")) {
             throw new IllegalArgumentException("Date is in the past");
         }
         FutureMeeting newMeeting = new MeetingImpl(contacts, date);
@@ -130,15 +131,15 @@ public class ContactManagerImpl implements ContactManager{
      * Method which checks if a contact exists in allKnownContacts
      * @throws IllegalArgumentException if not
      * @param contact to be checked
+     * @return true as long as the contact is previously known
      */
-    /** METHOD IS BELOW
-    private boolean contactIsKnown throws IllegalArgumentException (Contact contact){
-        // refer against allKnownContacts field
-        // have it throw IllegalArgumentException if it does not
-        // need to write addNewContact method first
+    private boolean contactIsKnown(Contact contact) throws IllegalArgumentException {
+        if (!allKnownContacts.contains(contact)) {
+          throw new IllegalArgumentException("Unknown contact passed through parameter");
+        }
+        return true;
     }
 
-    */
 
     /**
      * Method which returns a String indicating when in time meeting occurs
