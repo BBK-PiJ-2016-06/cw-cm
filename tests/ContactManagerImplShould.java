@@ -13,7 +13,6 @@ import java.util.*;
  */
 public class ContactManagerImplShould {
 
-    private Meeting meeting1;
     private Set<Contact> contactSet1;
     private Calendar futureDate;
     private ContactManager contactManager;
@@ -23,22 +22,21 @@ public class ContactManagerImplShould {
 
     @Before
     public void setUp() throws Exception {
-        futureDate = new GregorianCalendar(2050, 06, 06);
-        contactSet1 = new HashSet<Contact>();
-        for ( int i = 0; i < 100; i++ ) {
-            Contact person = new ContactImpl("Name" + i);
-            contactSet1.add(person);
-        }
         contactManager = new ContactManagerImpl();
+        futureDate = new GregorianCalendar(2050, 06, 06);
+        for ( int i = 0; i < 100; i++ ) {
+            contactManager.addNewContact(("Name" + i), ("note" + i) );
+        }
         dateInPast = new GregorianCalendar(1969, 06, 01);
         pastMeeting = new PastMeetingImpl(contactSet1, dateInPast, "Meeting occurred in past");
         contactManager.addNewContact("Darth Vader", "Use the Force");
+        contactSet1 = contactManager.getContacts("");
     }
 
     @Test
-    // tests for addFutureMeeting(Set<Contact> , Calendar)
-    public void return1WhenCallingAddFutureMeeting() {
-        assertEquals(1, contactManager.addFutureMeeting(contactSet1, futureDate));
+    // tests addFutureMeeting(Set<Contact> , Calendar)
+    public void return3WhenCallingAddFutureMeeting() {
+        assertEquals(3, contactManager.addFutureMeeting(contactSet1, futureDate));
     }
 
     @Test
@@ -55,12 +53,16 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * tests to see if addnewContact(String, String) @return an int of newly created Contact
-     * Expected result is 101 because 100 contacts previously created in @Before
+     * tests for addNewContact(String, String)
+     * @return an int of newly created Contact
+     * Expected result is 507 when running all tests because 101
+     * contacts are created in each @Before
      */
     public void returnAnIntWhenCallingAddNewContact() {
-        int result = contactManager.addNewContact("Darth Vader", "I am your Father");
-        assertEquals(101 , result);
+        Contact placeHolderContact = new ContactImpl("a name");
+        int expected = placeHolderContact.getId() + 1;
+        int result = contactManager.addNewContact("Boba Fett", "Is the coolest");
+        assertEquals(expected , result);
     }
 
     @Test
@@ -89,7 +91,8 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test to see if addNewContact throws nullPointerException when passing null String parameters
+     * Test for addNewContact
+     * throws nullPointerException when passing null String parameters
      */
     public void throwNullPointerExceptionWhenPassingNullStrings(){
         boolean exceptionThrown = false;
@@ -107,9 +110,10 @@ public class ContactManagerImplShould {
     /**
      * Tests addNewContact successfully adds a contact to Set<Contact> allKnownContacts
      */
-    public void containsCreatedContact() {
+    public void containNewlyCreatedContact() {
+        contactManager.addNewContact("Princess Leia", "heroine");
         Set<Contact> result = contactManager.getContacts("");
-        boolean hasName = result.stream().anyMatch(c -> c.getName().equals("Darth Vader"));
+        boolean hasName = result.stream().anyMatch(c -> c.getName().equals("Princess Leia"));
         assertTrue(hasName);
     }
 
@@ -131,7 +135,35 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
-    //@Test
+    @Test
     // test to make sure it DOESN'T throw an exception when all contacts are known.
+    public void notThrowExceptionWhenCallingAddFutureMeetingAndAllContactsAreKnown() {
+        boolean exceptionThrown = false;
+        Set<Contact> knownContacts = contactManager.getContacts("");
+        try {
+            contactManager.addFutureMeeting(knownContacts, futureDate);
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertFalse(exceptionThrown);
+    }
+
+   @Test
+    // test addNewPastMeeting creates a new past meeting
+    public void returnsAnIntWithExpectedIdWhenCallingAddNewPastMeeting() {
+        Meeting randomMeeting = new MeetingImpl(contactSet1, dateInPast);
+        int expected = randomMeeting.getId() + 1;
+        int result = contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
+        assertEquals(expected, result);
+    }
+
+    /**
+    @Test
+    public void returnAPastMeetingByItsIdNumber() {
+        int pastMeetingId = contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
+        contactManager.getPastMeeting(pastMeetingId);
+        assertEquals();
+    }
+    */
 
 }

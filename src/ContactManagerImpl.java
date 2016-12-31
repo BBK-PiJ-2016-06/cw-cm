@@ -37,8 +37,19 @@ public class ContactManagerImpl implements ContactManager{
         return newMeeting.getId();
     }
 
+    /**
+     * Returns the PAST meeting with the requested ID, or null if it there is none.
+     *
+     * The meeting must have happened at a past date.
+     *
+     * @param id the ID for the meeting
+     * @return the meeting with the requested ID, or null if it there is none.
+     * @throws IllegalStateException if there is a meeting with that ID happening
+     *         in the future
+     */
     @Override
     public PastMeeting getPastMeeting(int id) {
+
         return null;
     }
 
@@ -73,7 +84,7 @@ public class ContactManagerImpl implements ContactManager{
      * @param contacts a set of participants
      * @param date the date on which the meeting took place
      * @param text messages to be added about the meeting.
-     * @return the ID for the meeting
+     * @return the ID for the meeting  DONE
      * @throws IllegalArgumentException if the list of contacts is
      *     empty, if any of the contacts does not exist, or if
      *     the date provided is in the future
@@ -81,7 +92,8 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
-        return 0;
+        PastMeeting newPastMeeting = new PastMeetingImpl(contacts, date, text);
+        return newPastMeeting.getId();
     }
 
     @Override
