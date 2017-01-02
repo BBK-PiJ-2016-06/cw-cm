@@ -284,4 +284,47 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
+    @Test
+    /**
+     * Test for getFutureMeeting(int);
+     * addFutureMeeting returns an int of the newly created meeting, is expected
+     * Makes sure the resultMeeting @return the Id int that is expected
+     */
+    public void returnAFutureMeetingByItsIdNumber() {
+        int expected = contactManager.addFutureMeeting(contactSet1, futureDate);
+        Meeting resultMeeting = contactManager.getFutureMeeting(expected);
+        int result = resultMeeting.getId();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    /**
+     * Test for getFutureMeeting(int);
+     */
+    public void returnNullMeetingIfGetFutureMeetingCantFindId() {
+        int expected = 10 + contactManager.addFutureMeeting(contactSet1, futureDate);
+        // creates an int 10 larger than the highest possible # of Meetings
+        Meeting resultMeeting = contactManager.getFutureMeeting(expected);
+        assertNull(resultMeeting);
+    }
+
+    @Test
+    /**
+     * Test for getFutureMeeting(int);
+     * @throws IllegalStateException if there is a meeting with that ID happening
+     *         in the past
+     */
+    public void throwIllegalStateExceptionIfIdBelongsToPastMeeting() {
+        int idOfPastMeeting = contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
+        boolean exceptionThrown = false;
+        try {
+            Meeting resultMeeting = contactManager.getFutureMeeting(idOfPastMeeting);
+        } catch (IllegalStateException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+
+
 }

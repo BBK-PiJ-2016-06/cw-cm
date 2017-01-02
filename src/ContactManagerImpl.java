@@ -46,6 +46,14 @@ public class ContactManagerImpl implements ContactManager{
         return returnMeeting(pastMeetingList, id);
     }
 
+    /**
+     * Returns the FUTURE meeting with the requested ID, or null if there is none.
+     *
+     * @param id the ID for the meeting
+     * @return the meeting with the requested ID, or null if it there is none.
+     * @throws IllegalStateException if there is a meeting with that ID happening
+     *         in the past
+     */
     @Override
     public FutureMeeting getFutureMeeting(int id) {
         return null;
