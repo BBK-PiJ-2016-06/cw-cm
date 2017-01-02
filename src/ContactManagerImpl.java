@@ -48,17 +48,16 @@ public class ContactManagerImpl implements ContactManager{
      *         in the future
      */
     @Override
-    public PastMeeting getPastMeeting(int id) {
-        PastMeeting meetingWithId;
-        try {
-            meetingWithId = pastMeetingList.parallelStream()
-                    .filter(pM -> pM.getId() == id)
-                    .findFirst()
-                    .get();
-        } catch (NoSuchElementException ex) {
-            System.out.println("No Past Meeting with that ID");
-            meetingWithId = null;
+    public PastMeeting getPastMeeting (int id) throws IllegalStateException {
+        FutureMeeting futureMeeting = returnMeeting(futureMeeting, futureMeetingList, id);
+        if (!futureMeeting.equals(null)) {
+            throw new IllegalStateException( "ID belongs to a Future Meeting");
         }
+        PastMeeting meetingWithId = returnMeeting(meetingWithId, pastMeetingList, id);
+        meetingWithId = pastMeetingList.parallelStream()
+                .filter(meeting -> meeting.getId() == id )
+                .findFirst()
+                .get();
         return meetingWithId;
     }
 
@@ -100,7 +99,7 @@ public class ContactManagerImpl implements ContactManager{
      * @throws NullPointerException if any of the arguments is null
      */
     @Override
-    public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
+    public int addNewPastMeeting (Set<Contact> contacts, Calendar date, String text) {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
         if (calendarOccursIn(date).equals("future") || contacts.isEmpty()) {
             throw new IllegalArgumentException("Attempted to pass a Calendar in the future through" +
@@ -156,9 +155,9 @@ public class ContactManagerImpl implements ContactManager{
 
     /**
      * Method which checks if a contact exists in allKnownContacts
-     * @throws IllegalArgumentException if not
      * @param contact to be checked
      * @return true as long as the contact is previously known
+     * @throws IllegalArgumentException if not
      */
     private boolean contactIsKnown(Contact contact) throws IllegalArgumentException {
         if (!allKnownContacts.contains(contact)) {
@@ -182,6 +181,20 @@ public class ContactManagerImpl implements ContactManager{
         } else {
             return result;
         }
+    }
+
+    private <T, R> T returnMeeting(T meeting, List<R> meetingList, int id) {
+
+        try {
+            meeting = meetingList.parallelStream()
+                    .filter(m -> m.getId() == id )
+                    .findFirst()
+                    .get();
+        } catch (NoSuchElementException ex) {
+            System.out.println("No Meeting with that ID"); // delete this later
+            meeting = null;
+        }
+        return meeting;
     }
 
 }

@@ -274,7 +274,14 @@ public class ContactManagerImplShould {
      *         in the future
      */
     public void throwIllegalStateExceptionIfIdBelongsToFutureMeeting() {
-
+        int idOfFutureMeeting = contactManager.addFutureMeeting(contactSet1, futureDate);
+        boolean exceptionThrown = false;
+        try {
+            Meeting resultMeeting = contactManager.getPastMeeting(idOfFutureMeeting);
+        } catch (IllegalStateException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
     }
 
 }
