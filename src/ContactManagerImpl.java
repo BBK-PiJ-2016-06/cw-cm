@@ -49,15 +49,11 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public PastMeeting getPastMeeting (int id) throws IllegalStateException {
-        FutureMeeting futureMeeting = returnMeeting(futureMeeting, futureMeetingList, id);
+        FutureMeeting futureMeeting = returnMeeting(futureMeetingList, id);
         if (!futureMeeting.equals(null)) {
             throw new IllegalStateException( "ID belongs to a Future Meeting");
         }
-        PastMeeting meetingWithId = returnMeeting(meetingWithId, pastMeetingList, id);
-        meetingWithId = pastMeetingList.parallelStream()
-                .filter(meeting -> meeting.getId() == id )
-                .findFirst()
-                .get();
+        PastMeeting meetingWithId = returnMeeting(pastMeetingList, id);
         return meetingWithId;
     }
 
@@ -183,18 +179,26 @@ public class ContactManagerImpl implements ContactManager{
         }
     }
 
-    private <T, R> T returnMeeting(T meeting, List<R> meetingList, int id) {
-
-        try {
-            meeting = meetingList.parallelStream()
-                    .filter(m -> m.getId() == id )
-                    .findFirst()
-                    .get();
-        } catch (NoSuchElementException ex) {
-            System.out.println("No Meeting with that ID"); // delete this later
-            meeting = null;
-        }
-        return meeting;
+    /**
+     * Method which searches a List<T> meetingList for a meeting containing
+     * the identifying int
+     * @param meetingList the List<T> of meetings to search through
+     * @param id the identifying id of the meeting
+     * @param <T> The type of meeting (can be FutureMeeting, PastMeeting, etc)
+     * @return a meeting of the specified requirements or a null meeting if there is no
+     *          meeting within the list
+     */
+    private <T extends Meeting> T returnMeeting(List<T> meetingList, int id) {
+            T meeting;
+            try {
+                meeting = meetingList.parallelStream()
+                        .filter(m -> m.getId() == id)
+                        .findFirst()
+                        .get();
+            } catch (NoSuchElementException ex) {
+                meeting = null;
+            }
+            return meeting;
     }
 
 }
