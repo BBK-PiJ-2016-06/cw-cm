@@ -27,7 +27,7 @@ public class ContactManagerImpl implements ContactManager{
      * @throws NullPointerException if the meeting or the date are null
      */
     @Override
-    public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
+    public int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact)); // checks all Contacts are known
         if (calendarOccursIn(date).equals("past")) {
             throw new IllegalArgumentException("Date is in the past");
@@ -37,24 +37,13 @@ public class ContactManagerImpl implements ContactManager{
         return newMeeting.getId();
     }
 
-    /**
-     * Returns the PAST meeting with the requested ID, or null if it there is none.
-     *
-     * The meeting must have happened at a past date.
-     *
-     * @param id the ID for the meeting
-     * @return the meeting with the requested ID , or null if it there is none.
-     * @throws IllegalStateException if there is a meeting with that ID happening
-     *         in the future
-     */
+
     @Override
     public PastMeeting getPastMeeting (int id) throws IllegalStateException {
-        FutureMeeting futureMeeting = returnMeeting(futureMeetingList, id);
-        if (!futureMeeting.equals(null)) {
+        if (returnMeeting(futureMeetingList, id) != null ) {
             throw new IllegalStateException( "ID belongs to a Future Meeting");
         }
-        PastMeeting meetingWithId = returnMeeting(pastMeetingList, id);
-        return meetingWithId;
+        return returnMeeting(pastMeetingList, id);
     }
 
     @Override
@@ -189,16 +178,10 @@ public class ContactManagerImpl implements ContactManager{
      *          meeting within the list
      */
     private <T extends Meeting> T returnMeeting(List<T> meetingList, int id) {
-            T meeting;
-            try {
-                meeting = meetingList.parallelStream()
-                        .filter(m -> m.getId() == id)
-                        .findFirst()
-                        .get();
-            } catch (NoSuchElementException ex) {
-                meeting = null;
-            }
-            return meeting;
+            return meetingList.parallelStream()
+                    .filter(m -> m.getId() == id)
+                    .findFirst()
+                    .orElse(null);
     }
 
 }

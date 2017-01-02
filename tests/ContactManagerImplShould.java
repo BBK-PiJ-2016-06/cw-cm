@@ -261,8 +261,8 @@ public class ContactManagerImplShould {
      * Test for getPastMeeting(int);
      */
     public void returnNullMeetingIfGetPastMeetingCantFindId() {
-        int expected = contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
-        expected += 10; // creates an int 10 larger than the highest possible # of Meetings
+        int expected = 10 + contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
+        // creates an int 10 larger than the highest possible # of Meetings
         Meeting resultMeeting = contactManager.getPastMeeting(expected);
         assertNull(resultMeeting);
     }
