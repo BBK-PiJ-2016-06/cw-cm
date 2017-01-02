@@ -325,6 +325,42 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
+    @Test
+    /**
+     * Test for getMeeting(int);
+     * addFutureMeeting returns an int of the newly created meeting, is expected
+     * Makes sure the resultMeeting @return the Id int that is expected
+     */
+    public void returnAMeetingByItsIdNumber() {
+        int expected = contactManager.addFutureMeeting(contactSet1, futureDate);
+        Meeting resultMeeting = contactManager.getMeeting(expected);
+        int result = resultMeeting.getId();
+        assertEquals(expected, result);
+        // recreate for  pastMeeting as well
+        expected = contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
+        resultMeeting = contactManager.getPastMeeting(expected);
+        result = resultMeeting.getId();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    /**
+     * Test for getMeeting(int);
+     */
+    public void returnNullMeetingIfGetMeetingCantFindId() {
+        int expected = 10 + contactManager.addFutureMeeting(contactSet1, futureDate);
+        // creates an int 10 larger than the highest possible # of Meetings
+        Meeting resultMeeting = contactManager.getMeeting(expected);
+        assertNull(resultMeeting);
+        // recreate for  pastMeeting as well
+        expected = 10 + contactManager.addNewPastMeeting(contactSet1, dateInPast, "past meeting");
+        // creates an int 10 larger than the highest possible # of Meetings
+        resultMeeting = contactManager.getPastMeeting(expected);
+        assertNull(resultMeeting);
+    }
+
+
+
 
 
 }

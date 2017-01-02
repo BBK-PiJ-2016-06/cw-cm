@@ -46,21 +46,23 @@ public class ContactManagerImpl implements ContactManager{
         return returnMeeting(pastMeetingList, id);
     }
 
+    @Override
+    public FutureMeeting getFutureMeeting(int id) {
+        if (returnMeeting(pastMeetingList, id) != null ) {
+            throw new IllegalStateException( "ID belongs to a Past Meeting");
+        }
+        return returnMeeting(futureMeetingList, id);
+    }
+
     /**
-     * Returns the FUTURE meeting with the requested ID, or null if there is none.
+     * Returns the meeting with the requested ID, or null if it there is none.
      *
      * @param id the ID for the meeting
      * @return the meeting with the requested ID, or null if it there is none.
-     * @throws IllegalStateException if there is a meeting with that ID happening
-     *         in the past
      */
     @Override
-    public FutureMeeting getFutureMeeting(int id) {
-        return null;
-    }
-
-    @Override
     public Meeting getMeeting(int id) {
+
         return null;
     }
 
@@ -79,18 +81,6 @@ public class ContactManagerImpl implements ContactManager{
         return null;
     }
 
-    /**
-     * Create a new record for a meeting that took place in the past.
-     *
-     * @param contacts a set of participants
-     * @param date the date on which the meeting took place
-     * @param text messages to be added about the meeting.
-     * @return the ID for the meeting
-     * @throws IllegalArgumentException if the list of contacts is
-     *     empty DONE, if any of the contacts does not exist, or if
-     *     the date provided is in the future
-     * @throws NullPointerException if any of the arguments is null
-     */
     @Override
     public int addNewPastMeeting (Set<Contact> contacts, Calendar date, String text) {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
@@ -108,15 +98,6 @@ public class ContactManagerImpl implements ContactManager{
         return null;
     }
 
-    /**
-     * Create a new contact with the specified name and notes.
-     *
-     * @param name the name of the contact.
-     * @param notes notes to be added about the contact.
-     * @return the ID for the new contact
-     * @throws IllegalArgumentException if the name or the notes are empty strings
-     * @throws NullPointerException if the name or the notes are null
-     */
     @Override
     public int addNewContact(String name, String notes) {
         if (name.equals("") || notes.equals("")) {
