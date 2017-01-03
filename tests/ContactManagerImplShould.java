@@ -20,13 +20,25 @@ public class ContactManagerImplShould {
     private FutureMeeting futureMeeting;
     private Calendar dateInPast;
     private PastMeeting pastMeeting;
+    private Contact knownContact;
+    private Contact contactNotInFutureMeetings;
 
     @Before
     public void setUp() throws Exception {
         contactManager = new ContactManagerImpl();
-        contactManager.addNewContact("Darth Vader", "I am your father");
         contactManager.addNewContact("Luke Skywalker", "Nooooo!");
+        contactManager.addNewContact("Darth Vader", "I am your father");
         futureDate = new GregorianCalendar(2050, 06, 06);
+        knownContact = contactManager.getContacts("")
+                .stream()
+                .filter(m -> m.getName().equals("Darth Vader"))
+                .findFirst()
+                .get();
+        contactNotInFutureMeetings = contactManager.getContacts("")
+                .stream()
+                .filter(m -> m.getName().equals("Luke Skywalker"))
+                .findFirst()
+                .get();
         for ( int i = 0; i < 100; i++ ) {
             contactManager.addNewContact(("Name" + i), ("note" + i) );
         }
@@ -35,12 +47,10 @@ public class ContactManagerImplShould {
         Set<Contact> evenContacts = contactManager.getContacts("").stream()
                                         .filter(c -> (c.getId() % 2 == 0) )
                                         .collect(Collectors.toSet());
-        List<Integer> intListForMeetingsWithDarthVader = new ArrayList<>();
         for(int j = 01; j<13; j++) {
             futureDate = new GregorianCalendar( 2112, j, j);
-            intListForMeetingsWithDarthVader.add(contactManager.addFutureMeeting(evenContacts, futureDate)) ;
-                                    // intlist contains all the Id's of
-                                    //these new meetings
+            contactManager.addFutureMeeting(evenContacts, futureDate);
+
         }
         contactSet1 = contactManager.getContacts("");
     }
@@ -374,25 +384,56 @@ public class ContactManagerImplShould {
      * Test for getFutureMeetingList(Contact);
      */
     public void returnAListOfFutureMeetingsContainingKnownContactWhenCallingGetFutureMeetingList() {
-        Contact knownContact = contactManager.getContacts("")
-                    .stream()
-                    .filter(m -> m.getName().equals("Darth Vader"))
-                    .findFirst()
-                    .get();
         List<Meeting> resultMeetingList = contactManager.getFutureMeetingList(knownContact);
-        boolean allMeetingsContainDarthVader = true;
+        boolean allMeetingsContainKnownContact = true;
+
         for ( Meeting m : resultMeetingList) {
-            if ( m.getContacts().contains(knownContact) ) {
-                allMeetingsContainDarthVader = false;
+            if ( !m.getContacts().contains(knownContact) ) {
+                allMeetingsContainKnownContact = false;
             }
         }
-        assertTrue(allMeetingsContainDarthVader);
+        assertTrue(allMeetingsContainKnownContact);
+    }
 
-        // method returns a List<Meeting>
-        // that list should have all meetings that contain Darth Vader
-        // boolean - loop that goes through each meeting, checking that its participants contain darth vader
-        // if they don't, then the boolean is flipped.
+    @Test
+    /**
+     * Test for getFutureMeetingList(Contact);
+     */
+    public void returnsAnEmptyListIfContactIsNotContainedInAnyFutureMeetings() {
+        List<Meeting> emptyList = contactManager.getFutureMeetingList(contactNotInFutureMeetings);
+        assertTrue(emptyList.isEmpty());
+    }
 
+    @Test
+    /**
+     * Test for getFutureMeetingList(Contact);
+     */
+    public void throwNullPointerExceptionWhenPassingANullContact() {
+        Contact nullContact = null;
+        boolean exceptionThrown = false;
+        try {
+            List<Meeting> shouldNotGenerate = contactManager.getFutureMeetingList(nullContact);
+            System.out.println(shouldNotGenerate.size());
+            System.out.println("made it past?!");
+        } catch (NullPointerException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    /**
+     * Test for getFutureMeetingList(Contact);
+     */
+    public void throwIllegalArgumentExceptionWhenCallingGetFutureMeetingWithUnknownContact() {
+        Contact unknownContact = new ContactImpl("Name");
+        boolean exceptionThrown = false;
+        try{
+            contactManager.getFutureMeetingList(unknownContact);
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
     }
 
 

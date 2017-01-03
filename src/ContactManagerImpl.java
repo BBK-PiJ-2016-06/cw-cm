@@ -68,14 +68,16 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public List<Meeting> getFutureMeetingList(Contact contact) {
+        if (contact == null) {
+            throw new NullPointerException("contact is null");
+        }
+        contactIsKnown(contact);
         return futureMeetingList.parallelStream()
-                            .filter( m -> m.getContacts().contains(contact) )
-                            .collect(Collectors.toList());
+                    .filter(m -> m.getContacts().contains(contact))
+                    .collect(Collectors.toList());
 
-        // 1. Stream futureMeetingList, for each meeting search for the contact. If found, return the meeting
-        //          add.() it to a new List<Meeting>
-        // 2. Do a allKnownContacts.contains(contact) otherwise throw the exception
-        // 3. test to see if a null pointer throws itself
+        // 2. Need to sort chronologically
+
 
     }
 
