@@ -4,6 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -23,13 +24,24 @@ public class ContactManagerImplShould {
     @Before
     public void setUp() throws Exception {
         contactManager = new ContactManagerImpl();
+        contactManager.addNewContact("Darth Vader", "I am your father");
+        contactManager.addNewContact("Luke Skywalker", "Nooooo!");
         futureDate = new GregorianCalendar(2050, 06, 06);
         for ( int i = 0; i < 100; i++ ) {
             contactManager.addNewContact(("Name" + i), ("note" + i) );
         }
         dateInPast = new GregorianCalendar(1969, 06, 01);
         pastMeeting = new PastMeetingImpl(contactSet1, dateInPast, "Meeting occurred in past");
-        contactManager.addNewContact("Darth Vader", "Use the Force");
+        Set<Contact> evenContacts = contactManager.getContacts("").stream()
+                                        .filter(c -> (c.getId() % 2 == 0) )
+                                        .collect(Collectors.toSet());
+        List<Integer> intListForMeetingsWithDarthVader = new ArrayList<>();
+        for(int j = 01; j<13; j++) {
+            futureDate = new GregorianCalendar( 2112, j, j);
+            intListForMeetingsWithDarthVader.add(contactManager.addFutureMeeting(evenContacts, futureDate)) ;
+                                    // intlist contains all the Id's of
+                                    //these new meetings
+        }
         contactSet1 = contactManager.getContacts("");
     }
 
@@ -57,8 +69,6 @@ public class ContactManagerImplShould {
     /**
      * tests for addNewContact(String, String)
      * @return an int of newly created Contact
-     * Expected result is 507 when running all tests because 101
-     * contacts are created in each @Before
      */
     public void returnAnIntWhenCallingAddNewContact() {
         Contact placeHolderContact = new ContactImpl("a name");
@@ -359,7 +369,31 @@ public class ContactManagerImplShould {
         assertNull(resultMeeting);
     }
 
+    @Test
+    /**
+     * Test for getFutureMeetingList(Contact);
+     */
+    public void returnAListOfFutureMeetingsContainingKnownContactWhenCallingGetFutureMeetingList() {
+        Contact knownContact = contactManager.getContacts("")
+                    .stream()
+                    .filter(m -> m.getName().equals("Darth Vader"))
+                    .findFirst()
+                    .get();
+        List<Meeting> resultMeetingList = contactManager.getFutureMeetingList(knownContact);
+        boolean allMeetingsContainDarthVader = true;
+        for ( Meeting m : resultMeetingList) {
+            if ( m.getContacts().contains(knownContact) ) {
+                allMeetingsContainDarthVader = false;
+            }
+        }
+        assertTrue(allMeetingsContainDarthVader);
 
+        // method returns a List<Meeting>
+        // that list should have all meetings that contain Darth Vader
+        // boolean - loop that goes through each meeting, checking that its participants contain darth vader
+        // if they don't, then the boolean is flipped.
+
+    }
 
 
 

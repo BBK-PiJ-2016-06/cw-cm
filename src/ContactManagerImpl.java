@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * Created by nathanhanak on 12/28/16.
@@ -13,19 +14,7 @@ public class ContactManagerImpl implements ContactManager{
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
 
-    /**
-     * Add a new meeting to be held in the future.
-     *
-     * An ID is returned when the meeting is put into the system. This
-     * ID must be positive and non-zero.
-     *
-     * @param contacts a set of contacts that will participate in the meeting
-     * @param date the date on which the meeting will take place
-     * @return the ID for the meeting
-     * @throws IllegalArgumentException if the meeting is set for a time
-     *       in the past, of if any contact is unknown / non-existent.
-     * @throws NullPointerException if the meeting or the date are null
-     */
+
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact)); // checks all Contacts are known
@@ -54,21 +43,40 @@ public class ContactManagerImpl implements ContactManager{
         return returnMeeting(futureMeetingList, id);
     }
 
-    /**
-     * Returns the meeting with the requested ID, or null if it there is none.
-     *
-     * @param id the ID for the meeting
-     * @return the meeting with the requested ID, or null if it there is none.
-     */
     @Override
     public Meeting getMeeting(int id) {
-
-        return null;
+        Meeting meetingToReturn;
+        try {
+            meetingToReturn = getPastMeeting(id);
+        } catch (IllegalStateException ex) {
+            meetingToReturn = getFutureMeeting(id);
+        }
+        return meetingToReturn;
     }
 
+    /**
+     * Returns the list of future meetings scheduled with this contact.
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param contact one of the user’s contacts
+     * @return the list of future meeting(s) scheduled with this contact (maybe empty).
+     * @throws IllegalArgumentException if the contact does not exist
+     * @throws NullPointerException if the contact is null
+     */
     @Override
     public List<Meeting> getFutureMeetingList(Contact contact) {
-        return null;
+        return futureMeetingList.parallelStream()
+                            .filter( m -> m.getContacts().contains(contact) )
+                            .collect(Collectors.toList());
+
+        // 1. Stream futureMeetingList, for each meeting search for the contact. If found, return the meeting
+        //          add.() it to a new List<Meeting>
+        // 2. Do a allKnownContacts.contains(contact) otherwise throw the exception
+        // 3. test to see if a null pointer throws itself
+
     }
 
     @Override
@@ -108,6 +116,7 @@ public class ContactManagerImpl implements ContactManager{
         allKnownContacts.add(newContact);
         return newContact.getId();
     }
+
 
     @Override
     public Set<Contact> getContacts(String name) {
