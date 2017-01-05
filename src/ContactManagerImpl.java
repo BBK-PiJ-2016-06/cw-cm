@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  */
 public class ContactManagerImpl implements ContactManager{
 
-    private Set<Contact> allKnownContacts = new HashSet<>();
+    private Set<Contact> allknownFutureContacts = new HashSet<>();
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
 
@@ -61,9 +61,9 @@ public class ContactManagerImpl implements ContactManager{
         }
         contactIsKnown(contact);
         return futureMeetingList.parallelStream()
-                                    .filter(m -> m.getContacts().contains(contact))
-                                    .sorted(Comparator.comparing(Meeting::getDate))
-                                    .collect(Collectors.toList());
+                                .filter(m -> m.getContacts().contains(contact))
+                                .sorted(Comparator.comparing(Meeting::getDate))
+                                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,6 +71,18 @@ public class ContactManagerImpl implements ContactManager{
         return null;
     }
 
+    /**
+     * Returns the list of past meetings in which this contact has participated.
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param contact one of the user’s contacts
+     * @return the list of future meeting(s) scheduled with this contact (maybe empty).
+     * @throws IllegalArgumentException if the contact does not exist
+     * @throws NullPointerException if the contact is null
+     */
     @Override
     public List<PastMeeting> getPastMeetingListFor(Contact contact) {
         return null;
@@ -100,7 +112,7 @@ public class ContactManagerImpl implements ContactManager{
         }
         Contact newContact = new ContactImpl(name);
         newContact.addNotes(notes);
-        allKnownContacts.add(newContact);
+        allknownFutureContacts.add(newContact);
         return newContact.getId();
     }
 
@@ -108,7 +120,7 @@ public class ContactManagerImpl implements ContactManager{
     @Override
     public Set<Contact> getContacts(String name) {
         if (name.equals("")) {
-            return allKnownContacts;
+            return allknownFutureContacts;
         }
         return null;
     }
@@ -124,13 +136,13 @@ public class ContactManagerImpl implements ContactManager{
     }
 
     /**
-     * Method which checks if a contact exists in allKnownContacts
+     * Method which checks if a contact exists in allknownFutureContacts
      * @param contact to be checked
      * @return true as long as the contact is previously known
      * @throws IllegalArgumentException if not
      */
     private boolean contactIsKnown(Contact contact) throws IllegalArgumentException {
-        if (!allKnownContacts.contains(contact)) {
+        if (!allknownFutureContacts.contains(contact)) {
           throw new IllegalArgumentException("Unknown contact passed through parameter");
         }
         return true;
