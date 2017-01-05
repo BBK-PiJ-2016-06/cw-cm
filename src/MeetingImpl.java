@@ -29,23 +29,19 @@ public class MeetingImpl implements Meeting, FutureMeeting {
         this.date = date;
     }
 
-    /**
-     * Returns the id of the meeting.
-     *
-     * @return the id of the meeting.
-     */
+    @Override
     public int getId() {
         return meetingId;
     }
 
-
-    /**
-     * Return the date of the meeting.
-     *
-     * @return the date of the meeting.
-     */
+    @Override
     public Calendar getDate() {
         return date;
+    }
+
+    @Override
+    public Set<Contact> getContacts() {
+        return participants;
     }
 
     /**
@@ -53,26 +49,10 @@ public class MeetingImpl implements Meeting, FutureMeeting {
      *
      * parameter date to replace previous value for this meeting
      *
-     * @param Calendar newDate
+     * @param newDate is a Calendar
      */
     public void rescheduleMeeting(Calendar newDate){
         date = newDate;
     }
-
-    /**
-     * Return the details of people that attended the meeting.
-     *
-     * The list contains a minimum of one contact (if there were
-     * just two people: the user and the contact) and may contain an
-     * arbitrary number of them.
-     *
-     * @return the details of people that attended the meeting.
-     */
-    public Set<Contact> getContacts() {
-        return participants;
-    }
-
-
-
 
 }

@@ -22,6 +22,8 @@ public class ContactManagerImplShould {
     private PastMeeting pastMeeting;
     private Contact knownContact;
     private Contact contactNotInFutureMeetings;
+    Set<Contact> evenContacts;
+    List<Integer> intListForFutureMeetingList;
 
     @Before
     public void setUp() throws Exception {
@@ -35,22 +37,26 @@ public class ContactManagerImplShould {
                 .findFirst()
                 .get();
         contactNotInFutureMeetings = contactManager.getContacts("")
-                .stream()
-                .filter(m -> m.getName().equals("Luke Skywalker"))
-                .findFirst()
-                .get();
+                                                    .stream()
+                                                    .filter(m -> m.getName().equals("Luke Skywalker"))
+                                                    .findFirst()
+                                                    .get();
         for ( int i = 0; i < 100; i++ ) {
             contactManager.addNewContact(("Name" + i), ("note" + i) );
         }
         dateInPast = new GregorianCalendar(1969, 06, 01);
         pastMeeting = new PastMeetingImpl(contactSet1, dateInPast, "Meeting occurred in past");
-        Set<Contact> evenContacts = contactManager.getContacts("").stream()
+        evenContacts = contactManager.getContacts("").stream()
                                         .filter(c -> (c.getId() % 2 == 0) )
                                         .collect(Collectors.toSet());
+        intListForFutureMeetingList = new ArrayList<>();
         for(int j = 01; j<13; j++) {
             futureDate = new GregorianCalendar( 2112, j, j);
-            contactManager.addFutureMeeting(evenContacts, futureDate);
-
+            intListForFutureMeetingList.add(contactManager.addFutureMeeting(evenContacts, futureDate));
+        } // will add all ID's of futureMeetingList ID's here.
+        for(int j = 01; j<13; j++) {
+            dateInPast = new GregorianCalendar( 1969, j, j);
+            contactManager.addNewPastMeeting(evenContacts, dateInPast, "past meeting" + j);
         }
         contactSet1 = contactManager.getContacts("");
     }
@@ -247,6 +253,7 @@ public class ContactManagerImplShould {
             nullPointerThrown = true;
         }
         assertTrue(nullPointerThrown);
+        nullPointerThrown = false;
         try{
             String nullNotes = null;
             contactManager.addNewPastMeeting(contactSet1, dateInPast, nullNotes);
@@ -254,6 +261,7 @@ public class ContactManagerImplShould {
             nullPointerThrown = true;
         }
         assertTrue(nullPointerThrown);
+        nullPointerThrown = false;
         try{
             Calendar nullCalendar = null;
             contactManager.addNewPastMeeting( contactSet1, nullCalendar, someNotes);
@@ -413,8 +421,6 @@ public class ContactManagerImplShould {
         boolean exceptionThrown = false;
         try {
             List<Meeting> shouldNotGenerate = contactManager.getFutureMeetingList(nullContact);
-            System.out.println(shouldNotGenerate.size());
-            System.out.println("made it past?!");
         } catch (NullPointerException ex) {
             exceptionThrown = true;
         }
@@ -436,6 +442,30 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
+    @Test
+    /**
+     * Test for getFutureMeetingList(Contact);
+     * adds a new Meeting that is chronologically before any meetings added in @Before
+     * retrieves the Id of that meeting
+     * calls getFutureMeetingList and builds a result List<Meeting>
+     * iterate over every Meeting in List, calling getId and adding to new List<Integer>
+     * First element should match the Id of earliestMeetingId
+     */
+    public void returnAListThatIsChronologicallySortedWhenCallingGetFutureMeeting() {
+        Calendar earlierDate = new GregorianCalendar(2080, 06, 12);
+        int earliestMeetingId = contactManager.addFutureMeeting(evenContacts, earlierDate);
+
+        //adds a meeting w/higher ID but earlier date to existing futureMeetingList
+
+        List<Meeting> resultMeetingList = contactManager.getFutureMeetingList(knownContact);
+        List<Integer> resultIntList = new ArrayList<>();
+        for (Meeting m : resultMeetingList) {
+            resultIntList.add(m.getId());
+        }
+        int result = resultIntList.get(0);
+        assertEquals(earliestMeetingId, result);
+
+    }
 
 
 }
