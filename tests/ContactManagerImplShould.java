@@ -72,7 +72,7 @@ public class ContactManagerImplShould {
     @Test
     // tests addFutureMeeting(Set<Contact> , Calendar)
     public void returnExpectedIntWhenCallingAddFutureMeeting() {
-        FutureMeeting randomMeeting = new MeetingImpl(contactSet1, futureDate);
+        FutureMeeting randomMeeting = new FutureMeetingImpl(contactSet1, futureDate);
         int expected = randomMeeting.getId() + 1;
         assertEquals(expected, contactManager.addFutureMeeting(contactSet1, futureDate));
     }
@@ -500,7 +500,13 @@ public class ContactManagerImplShould {
      * Test for getPastMeetingListFor(Contact);
      */
     public void returnsAnEmptyListIfContactIsNotContainedInAnyPastMeetings() {
-        List<PastMeeting> emptyList = contactManager.getPastMeetingListFor(knownFutureContact);
+        contactManager.addNewContact("Boba Fett", "Not in past meetings");
+        Contact contactNotInPastMeetings =    contactManager.getContacts("")
+                                                            .stream()
+                                                            .filter(m -> m.getName().equals("Boba Fett"))
+                                                            .findFirst()
+                                                            .get();
+        List<PastMeeting> emptyList = contactManager.getPastMeetingListFor(contactNotInPastMeetings);
         assertTrue(emptyList.isEmpty());
     }
 
@@ -535,7 +541,6 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    @Ignore
     /**
      * Test for getPastMeetingListFor(Contact);
      * adds a new Meeting that is chronologically before any meetings added in @Before
@@ -559,5 +564,10 @@ public class ContactManagerImplShould {
         assertEquals(earliestMeetingId, result);
     }
 
+    @Test
+    // test for getContacts(String)
+    public void returnASetOfContactsContainingOnlyTheDesiredName() {
+        boolean containsNonDesiredName = false;
+    }
 
 }

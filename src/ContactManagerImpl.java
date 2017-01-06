@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
  */
 public class ContactManagerImpl implements ContactManager{
 
-    private Set<Contact> allknownFutureContacts = new HashSet<>();
+    private Set<Contact> allKnownContacts = new HashSet<>();
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
 
@@ -21,7 +20,7 @@ public class ContactManagerImpl implements ContactManager{
         if (calendarOccursIn(date).equals("past")) {
             throw new IllegalArgumentException("Date is in the past");
         }
-        FutureMeeting newMeeting = new MeetingImpl(contacts, date);
+        FutureMeeting newMeeting = new FutureMeetingImpl(contacts, date);
         futureMeetingList.add(newMeeting);
         return newMeeting.getId();
     }
@@ -55,15 +54,8 @@ public class ContactManagerImpl implements ContactManager{
     }
 
     @Override
-    public List<Meeting> getFutureMeetingList(Contact contact) {
-        if (contact == null) {
-            throw new NullPointerException("contact is null");
-        }
-        contactIsKnown(contact);
-        return futureMeetingList.parallelStream()
-                                .filter(m -> m.getContacts().contains(contact))
-                                .sorted(Comparator.comparing(Meeting::getDate))
-                                .collect(Collectors.toList());
+    public List<Meeting> getFutureMeetingList(Contact contact) throws IllegalArgumentException {
+        return returnsMeetingListByContact(futureMeetingList, contact);
     }
 
     @Override
@@ -84,13 +76,16 @@ public class ContactManagerImpl implements ContactManager{
      * @throws NullPointerException if the contact is null
      */
     @Override
-    public List<PastMeeting> getPastMeetingListFor(Contact contact) {
-        return null;
+    public List<PastMeeting> getPastMeetingListFor(Contact contact) throws IllegalArgumentException {
+        return returnsMeetingListByContact(pastMeetingList, contact);
     }
 
     @Override
     public int addNewPastMeeting (Set<Contact> contacts, Calendar date, String text) {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
+        if (text == null) {
+            throw new NullPointerException("Notes are null");
+        }
         if (calendarOccursIn(date).equals("future") || contacts.isEmpty()) {
             throw new IllegalArgumentException("Attempted to pass a Calendar in the future through" +
                     "addNewPastMeeting() or contacts is empty");
@@ -112,18 +107,28 @@ public class ContactManagerImpl implements ContactManager{
         }
         Contact newContact = new ContactImpl(name);
         newContact.addNotes(notes);
-        allknownFutureContacts.add(newContact);
+        allKnownContacts.add(newContact);
         return newContact.getId();
     }
 
-
+    /**
+     * Returns a set with the contacts whose name contains that string.
+     *
+     * If the string is the empty string, this methods returns the set
+     * that contains all current contacts.
+     *
+     * @param name the string to search for
+     * @return a set with the contacts whose name contains that string.
+     * @throws NullPointerException if the parameter is null
+     */
     @Override
     public Set<Contact> getContacts(String name) {
         if (name.equals("")) {
-            return allknownFutureContacts;
+            return allKnownContacts;
         }
         return null;
     }
+
 
     @Override
     public Set<Contact> getContacts(int... ids) {
@@ -136,13 +141,13 @@ public class ContactManagerImpl implements ContactManager{
     }
 
     /**
-     * Method which checks if a contact exists in allknownFutureContacts
+     * Method which checks if a contact exists in allKnownContacts
      * @param contact to be checked
      * @return true as long as the contact is previously known
-     * @throws IllegalArgumentException if not
+     * @throws IllegalArgumentException if contact is not contained in allKnownContacts
      */
     private boolean contactIsKnown(Contact contact) throws IllegalArgumentException {
-        if (!allknownFutureContacts.contains(contact)) {
+        if (!allKnownContacts.contains(contact)) {
           throw new IllegalArgumentException("Unknown contact passed through parameter");
         }
         return true;
@@ -176,9 +181,31 @@ public class ContactManagerImpl implements ContactManager{
      */
     private <T extends Meeting> T returnMeeting(List<T> meetingList, int id) {
             return meetingList.parallelStream()
-                    .filter(m -> m.getId() == id)
-                    .findFirst()
-                    .orElse(null);
+                                .filter(m -> m.getId() == id)
+                                .findFirst()
+                                .orElse(null);
+    }
+
+    /**
+     * Method which first checks if the contact is null, then
+     * returns a List<T extends Meeting> based on which type of List is passed through parameters
+     * containing all meetings with specified contact.
+     * @param meetingList a list of meetings to search.
+     * @param contact a specified contact whose participating meetings we are searching for
+     * @param <? extends T> Meeting. A List of an type that is an extension of Meeting.
+     * @return List<T extends Meeting> a list of all meetings in time frame containing contact
+     * @throws IllegalArgumentException if the contact is not contained in allKnownContacts.
+     */
+    private <T extends Meeting> List<T> returnsMeetingListByContact(List<? extends T> meetingList, Contact contact)
+            throws IllegalArgumentException {
+        if (contact == null) {
+            throw new NullPointerException("contact is null");
+        }
+        contactIsKnown(contact);
+        return   meetingList.parallelStream()
+                            .filter(m -> m.getContacts().contains(contact))
+                            .sorted(Comparator.comparing(Meeting::getDate))
+                            .collect(Collectors.toList());
     }
 
 }

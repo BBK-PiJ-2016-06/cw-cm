@@ -4,7 +4,7 @@ import java.util.Set;
 /**
  * Created by nathanhanak on 12/29/16.
  */
-public class PastMeetingImpl extends MeetingImpl implements Meeting, PastMeeting  {
+public class PastMeetingImpl extends MeetingImpl implements PastMeeting  {
 
     String notes = "";
 
