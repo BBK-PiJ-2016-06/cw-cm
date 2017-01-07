@@ -63,18 +63,6 @@ public class ContactManagerImpl implements ContactManager{
         return null;
     }
 
-    /**
-     * Returns the list of past meetings in which this contact has participated.
-     *
-     * If there are none, the returned list will be empty. Otherwise,
-     * the list will be chronologically sorted and will not contain any
-     * duplicates.
-     *
-     * @param contact one of the user’s contacts
-     * @return the list of future meeting(s) scheduled with this contact (maybe empty).
-     * @throws IllegalArgumentException if the contact does not exist
-     * @throws NullPointerException if the contact is null
-     */
     @Override
     public List<PastMeeting> getPastMeetingListFor(Contact contact) throws IllegalArgumentException {
         return returnsMeetingListByContact(pastMeetingList, contact);
@@ -95,6 +83,20 @@ public class ContactManagerImpl implements ContactManager{
         return newPastMeeting.getId();
     }
 
+    /**
+     * Add notes to a meeting.
+     *
+     * This method is used when a future meeting takes place, and is
+     * then converted to a past meeting (with notes) and returned.
+     *
+     * It can be also used to add notes to a past meeting at a later date.
+     *
+     * @param id the ID of the meeting
+     * @param text messages to be added about the meeting.
+     * @throws IllegalArgumentException if the meeting does not exist
+     * @throws IllegalStateException if the meeting is set for a date in the future
+     * @throws NullPointerException if the notes are null
+     */
     @Override
     public PastMeeting addMeetingNotes(int id, String text) {
         return null;
@@ -111,22 +113,15 @@ public class ContactManagerImpl implements ContactManager{
         return newContact.getId();
     }
 
-    /**
-     * Returns a set with the contacts whose name contains that string.
-     *
-     * If the string is the empty string, this methods returns the set
-     * that contains all current contacts.
-     *
-     * @param name the string to search for
-     * @return a set with the contacts whose name contains that string.
-     * @throws NullPointerException if the parameter is null
-     */
     @Override
     public Set<Contact> getContacts(String name) {
         if (name.equals("")) {
-            return allKnownContacts;
+            return  allKnownContacts;
+        } else {
+            return  allKnownContacts.parallelStream()
+                                    .filter(c -> c.getName().equals(name))
+                                    .collect(Collectors.toSet());
         }
-        return null;
     }
 
 

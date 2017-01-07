@@ -568,6 +568,36 @@ public class ContactManagerImplShould {
     // test for getContacts(String)
     public void returnASetOfContactsContainingOnlyTheDesiredName() {
         boolean containsNonDesiredName = false;
+        for (int i = 0; i < 10; i++) {
+            contactManager.addNewContact("Stormtrooper", "Clone:" + i);
+        }
+        Set<Contact> resultSet = contactManager.getContacts("Stormtrooper");
+        for ( Contact c : resultSet) {
+            if ( !c.getName().equals("Stormtrooper")) {
+                containsNonDesiredName = true;
+            }
+        }
+        assertFalse(containsNonDesiredName);
+    }
+
+    @Test
+    // test for getContacts(String);
+    public void throwNullPointerExceptionWhenPassingNullStringThroughGetContacts() {
+        String nullString = null;
+        boolean exceptionThrown = false;
+        try {
+            contactManager.getContacts(nullString);
+        } catch (NullPointerException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    //test for getContacts(String);
+    public void returnAnEmptySetWhenCallingGetContactsForAnUnknownContact() {
+        Set<Contact> resultSet = contactManager.getContacts("Doesn't exist");
+        assertTrue(resultSet.isEmpty());
     }
 
 }
