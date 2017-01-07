@@ -17,6 +17,8 @@ public class ContactManagerImpl implements ContactManager{
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact)); // checks all Contacts are known
+        checksIfNull(contacts, "Set<contacts>");
+        checksIfNull(date, "Calendar");
         if (calendarOccursIn(date).equals("past")) {
             throw new IllegalArgumentException("Date is in the past");
         }
@@ -60,6 +62,7 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public List<Meeting> getMeetingListOn(Calendar date) {
+        checksIfNull(date, "Calendar");
         return null;
     }
 
@@ -70,10 +73,10 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public int addNewPastMeeting (Set<Contact> contacts, Calendar date, String text) {
+        checksIfNull(contacts, "Set<Contact>");
+        checksIfNull(date, "Calendar");
+        checksIfNull(text, "String");
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
-        if (text == null) {
-            throw new NullPointerException("Notes are null");
-        }
         if (calendarOccursIn(date).equals("future") || contacts.isEmpty()) {
             throw new IllegalArgumentException("Attempted to pass a Calendar in the future through" +
                     "addNewPastMeeting() or contacts is empty");
@@ -99,11 +102,21 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public PastMeeting addMeetingNotes(int id, String text) {
-        return null;
+        checksIfNull(text, "String");
+        PastMeeting retrievedPastMeeting = getPastMeeting(id);
+        if (retrievedPastMeeting == null) {
+            throw new IllegalArgumentException("Meeting does not exist");
+        }
+        if ( retrievedPastMeeting instanceof PastMeetingImpl) {
+            ((PastMeetingImpl) retrievedPastMeeting).addNotes(text);
+        }
+        return retrievedPastMeeting;
     }
 
     @Override
     public int addNewContact(String name, String notes) {
+        checksIfNull(name, "String");
+        checksIfNull(notes, "String");
         if (name.equals("") || notes.equals("")) {
             throw new IllegalArgumentException("Passed an empty String parameter");
         }
@@ -115,6 +128,7 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public Set<Contact> getContacts(String name) {
+        checksIfNull(name, "String");
         if (name.equals("")) {
             return  allKnownContacts;
         } else {
@@ -190,17 +204,22 @@ public class ContactManagerImpl implements ContactManager{
      * @param <? extends T> Meeting. A List of an type that is an extension of Meeting.
      * @return List<T extends Meeting> a list of all meetings in time frame containing contact
      * @throws IllegalArgumentException if the contact is not contained in allKnownContacts.
+     * @throws NullPointerException if the contact is null
      */
     private <T extends Meeting> List<T> returnsMeetingListByContact(List<? extends T> meetingList, Contact contact)
-            throws IllegalArgumentException {
-        if (contact == null) {
-            throw new NullPointerException("contact is null");
-        }
+            throws IllegalArgumentException, NullPointerException {
+        checksIfNull(contact, "Contact");
         contactIsKnown(contact);
         return   meetingList.parallelStream()
                             .filter(m -> m.getContacts().contains(contact))
                             .sorted(Comparator.comparing(Meeting::getDate))
                             .collect(Collectors.toList());
+    }
+
+    private <T> void checksIfNull(T t, String type) {
+        if ( t == null) {
+            throw new NullPointerException("Attempted to pass a null " + type);
+        }
     }
 
 }

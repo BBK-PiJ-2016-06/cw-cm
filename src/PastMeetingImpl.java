@@ -6,23 +6,19 @@ import java.util.Set;
  */
 public class PastMeetingImpl extends MeetingImpl implements PastMeeting  {
 
-    String notes = "";
+    public String notes = "";
 
     public PastMeetingImpl(Set<Contact> contacts, Calendar date, String notes) {
         super(contacts, date);
         this.notes = notes;
     }
 
-    /**
-     * Returns the notes from the meeting.
-     *
-     * If there are no notes, the empty string is returned.
-     *
-     * @return the notes from the meeting.
-     */
-    @Override
     public String getNotes() {
         return notes;
+    }
+
+    public void addNotes(String newText) {
+        notes += newText;
     }
 
 }

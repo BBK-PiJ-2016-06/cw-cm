@@ -475,10 +475,6 @@ public class ContactManagerImplShould {
 
     }
 
-
-
-
-
     @Test
     /**
      * Test for getPastMeetingListFor(Contact);
@@ -602,7 +598,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * test for addMeetingNotes(string
+     * test for addMeetingNotes(String)
      * test to see that notes are added to an already existing pastMeeting
      */
     public void returnAllNotesToAPastMeetingWhenCallingGetNotes() {
@@ -612,6 +608,34 @@ public class ContactManagerImplShould {
         String result = contactManager.getPastMeeting(pastMtgId).getNotes();
         assertEquals("note1 addendum", result);
     }
+
+    @Test
+    // test for addMeetingNotes(String)
+    public void throwIllegalArgumentExceptionIfMeetingDoesNotExist() {
+        int idOfNoMeeting = 100000;
+        boolean exceptionThrown = false;
+        try {
+            contactManager.addMeetingNotes(idOfNoMeeting, "notes");
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    //test for addMeetingNotes(String)
+    public void throwNullPointerExceptionWhenPassingNullNotesThroughAddMeetingNotes() {
+        String nullString = null;
+        boolean exceptionThrown = false;
+        int meetingId = contactManager.addNewPastMeeting(evenContacts, dateInPast, "notes");
+        try {
+            contactManager.addMeetingNotes(meetingId , nullString);
+        } catch (NullPointerException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
 
 
 }
