@@ -17,8 +17,8 @@ public class ContactManagerImpl implements ContactManager{
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException {
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact)); // checks all Contacts are known
-        checksIfNull(contacts, "Set<contacts>");
-        checksIfNull(date, "Calendar");
+        checksIfNull("Set<contacts>", contacts);
+        checksIfNull("Calendar", date);
         if (calendarOccursIn(date).equals("past")) {
             throw new IllegalArgumentException("Date is in the past");
         }
@@ -60,9 +60,21 @@ public class ContactManagerImpl implements ContactManager{
         return returnsMeetingListByContact(futureMeetingList, contact);
     }
 
+    /**
+     * Returns the list of meetings that are scheduled for, or that took
+     * place on, the specified date
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param date the date
+     * @return the list of meetings
+     * @throws NullPointerException if the date are null
+     */
     @Override
     public List<Meeting> getMeetingListOn(Calendar date) {
-        checksIfNull(date, "Calendar");
+        checksIfNull("Calendar", date);
         return null;
     }
 
@@ -73,16 +85,16 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public int addNewPastMeeting (Set<Contact> contacts, Calendar date, String text) {
-        checksIfNull(contacts, "Set<Contact>");
-        checksIfNull(date, "Calendar");
-        checksIfNull(text, "String");
+        checksIfNull("Set<Contact>", contacts);
+        checksIfNull("Calendar", date);
+        checksIfNull("String", text);
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
         if (calendarOccursIn(date).equals("future") || contacts.isEmpty()) {
-            throw new IllegalArgumentException("Attempted to pass a Calendar in the future through" +
-                    "addNewPastMeeting() or contacts is empty");
+            throw new IllegalArgumentException("Attempted to pass a Calendar in the future through or contacts is empty");
         }
-        PastMeeting newPastMeeting = new PastMeetingImpl(contacts, date, text);
+        PastMeeting newPastMeeting = new PastMeetingImpl(contacts, date);
         pastMeetingList.add(newPastMeeting);
+        newPastMeeting = addMeetingNotes(newPastMeeting.getId(), text);
         return newPastMeeting.getId();
     }
 
@@ -102,7 +114,7 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public PastMeeting addMeetingNotes(int id, String text) {
-        checksIfNull(text, "String");
+        checksIfNull("String", text);
         PastMeeting retrievedPastMeeting = getPastMeeting(id);
         if (retrievedPastMeeting == null) {
             throw new IllegalArgumentException("Meeting does not exist");
@@ -115,8 +127,7 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public int addNewContact(String name, String notes) {
-        checksIfNull(name, "String");
-        checksIfNull(notes, "String");
+        checksIfNull("String", name, notes);
         if (name.equals("") || notes.equals("")) {
             throw new IllegalArgumentException("Passed an empty String parameter");
         }
@@ -128,7 +139,7 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public Set<Contact> getContacts(String name) {
-        checksIfNull(name, "String");
+        checksIfNull("String", name);
         if (name.equals("")) {
             return  allKnownContacts;
         } else {
@@ -150,9 +161,10 @@ public class ContactManagerImpl implements ContactManager{
     }
 
     /**
-     * Method which checks if a contact exists in allKnownContacts
+     * Method which checks if a contact has previously been created by
+     * looking in allKnownContacts
      * @param contact to be checked
-     * @return true as long as the contact is previously known
+     * @return true as long as the contact has been created and added to allKnownContacts
      * @throws IllegalArgumentException if contact is not contained in allKnownContacts
      */
     private boolean contactIsKnown(Contact contact) throws IllegalArgumentException {
@@ -161,7 +173,6 @@ public class ContactManagerImpl implements ContactManager{
         }
         return true;
     }
-
 
     /**
      * Method which returns a String indicating when in time meeting occurs
@@ -189,7 +200,7 @@ public class ContactManagerImpl implements ContactManager{
      *          meeting within the list
      */
     private <T extends Meeting> T returnMeeting(List<T> meetingList, int id) {
-            return meetingList.parallelStream()
+            return   meetingList.parallelStream()
                                 .filter(m -> m.getId() == id)
                                 .findFirst()
                                 .orElse(null);
@@ -208,7 +219,7 @@ public class ContactManagerImpl implements ContactManager{
      */
     private <T extends Meeting> List<T> returnsMeetingListByContact(List<? extends T> meetingList, Contact contact)
             throws IllegalArgumentException, NullPointerException {
-        checksIfNull(contact, "Contact");
+        checksIfNull("Contact", contact);
         contactIsKnown(contact);
         return   meetingList.parallelStream()
                             .filter(m -> m.getContacts().contains(contact))
@@ -216,9 +227,18 @@ public class ContactManagerImpl implements ContactManager{
                             .collect(Collectors.toList());
     }
 
-    private <T> void checksIfNull(T t, String type) {
-        if ( t == null) {
-            throw new NullPointerException("Attempted to pass a null " + type);
+    /**
+     * Method which serves as a verification mechanism for objects. Method will throw
+     * NullPointerException if the passed Object parameter is null.
+     * @param type String describing the type of the Object parameter.
+     * @param o a varargs list of one or more Objects to be examined to be null.
+     * @throws NullPointerException if one or more of the the Object parameter are null.
+     */
+    private void checksIfNull(String type, Object... o) throws NullPointerException {
+        for (Object myO : o) {
+            if ( myO == null) {
+                throw new NullPointerException("Attempted to pass a null " + type);
+            }
         }
     }
 

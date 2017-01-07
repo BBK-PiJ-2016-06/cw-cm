@@ -43,7 +43,7 @@ public class MeetingImplShould {
         meeting2 = new MeetingImpl(contacts, futureDate);
         notes = "These are some notes";
         emptyNotes = "";
-        pastMeeting = new PastMeetingImpl(contacts, pastDate, "Old meeting");
+        pastMeeting = new PastMeetingImpl(contacts, pastDate);
     }
 
     @Test

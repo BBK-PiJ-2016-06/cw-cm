@@ -47,7 +47,7 @@ public class ContactManagerImplShould {
             contactManager.addNewContact(("Name" + i), ("note" + i) );
         }
         dateInPast = new GregorianCalendar(1969, 06, 01);
-        pastMeeting = new PastMeetingImpl(contactSet1, dateInPast, "Meeting occurred in past");
+        pastMeeting = new PastMeetingImpl(contactSet1, dateInPast);
         evenContacts = contactManager.getContacts("").stream()
                                         .filter(c -> (c.getId() % 2 == 0) )
                                         .collect(Collectors.toSet());
@@ -631,6 +631,19 @@ public class ContactManagerImplShould {
         try {
             contactManager.addMeetingNotes(meetingId , nullString);
         } catch (NullPointerException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    //test for addMeetingNotes(String)
+    public void throwIllegalStateExceptionWhenPassingIdOfFutureMeetingThroughAddMeetingNotes() {
+        int futureMeetingId = contactManager.addFutureMeeting(oddContacts, futureDate);
+        boolean exceptionThrown = false;
+        try {
+            contactManager.addMeetingNotes(futureMeetingId, "some notes");
+        } catch (IllegalStateException ex) {
             exceptionThrown = true;
         }
         assertTrue(exceptionThrown);
