@@ -600,4 +600,18 @@ public class ContactManagerImplShould {
         assertTrue(resultSet.isEmpty());
     }
 
+    @Test
+    /**
+     * test for addMeetingNotes(string
+     * test to see that notes are added to an already existing pastMeeting
+     */
+    public void returnAllNotesToAPastMeetingWhenCallingGetNotes() {
+        Calendar oldDate = new GregorianCalendar(1950, 03, 17);
+        int pastMtgId = contactManager.addNewPastMeeting(evenContacts, oldDate, "note1 " );
+        contactManager.addMeetingNotes(pastMtgId, "addendum");
+        String result = contactManager.getPastMeeting(pastMtgId).getNotes();
+        assertEquals("note1 addendum", result);
+    }
+
+
 }
