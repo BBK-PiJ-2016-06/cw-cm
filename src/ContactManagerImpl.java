@@ -1,3 +1,4 @@
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,8 +76,26 @@ public class ContactManagerImpl implements ContactManager{
     @Override
     public List<Meeting> getMeetingListOn(Calendar date) {
         checksIfNull("Calendar", date);
+        if (calendarOccursIn(date).equals("past")) {
+            return getMeetingListOn(date, pastMeetingList);
+        } else {
+            return getMeetingListOn(date, futureMeetingList);
+        }
+    }
 
-        return null;
+    private List<Meeting> getMeetingListOn(Calendar date, List<? extends Meeting> meetingList) {
+        return meetingList.parallelStream()
+                .filter(m -> m.getDate().compareTo(date) == 0)
+                .sorted(Comparator.comparing(Meeting::getDate))
+                .collect(Collectors.toList());
+        /* below was attempt to find the matches by date, but all enums are constants? Above code works well enough for
+        just by the date alone.
+        return meetingList.parallelStream()
+                            .allMatch(m ->    (m.getDate().YEAR) == date.YEAR &&
+                                            (m.getDate().MONTH) == date.MONTH &&
+                                            (m.getDate().DAY_OF_MONTH) == date.DAY_OF_MONTH).
+                            .sorted(Comparator.comparing(Meeting::getDate))
+                            .collect(Collectors.toList()); */
     }
 
     @Override

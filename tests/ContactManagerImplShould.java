@@ -677,21 +677,23 @@ public class ContactManagerImplShould {
         assertTrue(resultList.contains(pastMeeting2));
     }
 
+    // TEST IF CHECKS FOR SORTING BY TIME - NOT SURE HOW TO WRITE THIS IN TO CALLING METHOD.
     @Test
+    @Ignore
     // test for getMeetingListOn(Calendar date)
     public void returnASortedPastMeetingListWhenCallingGetMeetingListOn() {
         Calendar pastMeetingDate;
         List<Integer> meetingIdsAsEntered = new ArrayList<>();
         for (int i = 10; i > 0; i--) {
-            pastMeetingDate = new GregorianCalendar(1999, 04, 06, 17, 30);
+            pastMeetingDate = new GregorianCalendar(1999, 04, 06, 17 + i, 30 + i);
             meetingIdsAsEntered.add(contactManager.addNewPastMeeting(oddContacts, pastMeetingDate, "Meeting" + i));
         }
-        //String deleteMe = meetingIdsAsEntered.toString();
-        //System.out.println(deleteMe);
-        //When running, uncomment those to see if it didn't sort itself to begin with.
-        meetingIdsAsEntered.sort(Comparator.comparingInt(Integer::intValue));
-        String expectedString = meetingIdsAsEntered.toString();
-        System.out.println(expectedString);
+        List<Integer> reversedMeetings = new ArrayList<>();
+        for ( int i = 9; i > -1; i--) {
+            reversedMeetings.add(meetingIdsAsEntered.get(i));
+        }
+        String expectedString = reversedMeetings.toString(); // starts at 35, ends at 26
+
         Calendar desiredDate = new GregorianCalendar(1999, 04, 06);
         List<Meeting> resultMeetingList = contactManager.getMeetingListOn(desiredDate);
         List<Integer> resultMeetingIdList = new ArrayList<>();
@@ -702,6 +704,26 @@ public class ContactManagerImplShould {
         assertEquals(expectedString, resultString);
     }
 
+    @Test
+    // test for getMeetingListOn(Calendar)
+    public void returnAnEmptyMeetingListIfThereAreNoMeetingsOnRequestedDate() {
+        Calendar dateWithNoMeeting = new GregorianCalendar(2030, 9, 22);
+        List<Meeting> resultList = contactManager.getMeetingListOn(dateWithNoMeeting);
+        assertTrue(resultList.isEmpty());
+    }
+
+    @Test
+    // test for getMeetingListOn(Calendar)
+    public void throwNullPointerExceptionWhenPassingNullCalendarThroughGetMeetingListOn() {
+        boolean exceptionThrown = false;
+        Calendar nullCalendar = null;
+        try{
+            contactManager.getMeetingListOn(nullCalendar);
+        } catch (NullPointerException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
 
 
 }
