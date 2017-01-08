@@ -1,3 +1,4 @@
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,11 +27,13 @@ public class ContactManagerImplShould {
     private Set<Contact> oddContacts;
     private List<Integer> intListForFutureMeetingList;
     private List<Integer> intListForPastMeetingList;
+    private int lukeID;
 
     @Before
     public void setUp() throws Exception {
         contactManager = new ContactManagerImpl();
-        contactManager.addNewContact("Luke Skywalker", "Nooooo!");
+        lukeID = contactManager.addNewContact("Luke Skywalker", "Nooooo!");
+        System.out.println("Luke's ID =" + lukeID);
         contactManager.addNewContact("Darth Vader", "I am your father");
         futureDate = new GregorianCalendar(2050, 06, 06);
         knownFutureContact = contactManager.getContacts("")
@@ -67,6 +70,12 @@ public class ContactManagerImplShould {
                     (contactManager.addNewPastMeeting(oddContacts, dateInPast, "past meeting" + j));
         }
         contactSet1 = contactManager.getContacts("");
+        System.out.println("All known contacts size = " + contactManager.getContacts("").size());
+    }
+
+    @After
+    public void cleanUp() {
+        contactManager = null;
     }
 
     @Test
@@ -715,13 +724,37 @@ public class ContactManagerImplShould {
         List<Integer> expectedIdList = new ArrayList<>();
         for (int i = 1; i < 11; i++) { expectedIdList.add(i);}
         String expectedString = expectedIdList.toString();
-
+        System.out.println("Luke Array size" + contactManager.getContacts("Luke Skywalker").size());
         Set<Contact> resultContactSet = contactManager.getContacts(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         List<Integer> resultIdList = new ArrayList<>();
         for ( Contact c : resultContactSet) { resultIdList.add(c.getId()); }
+        Collections.sort(resultIdList);
         String resultString = resultIdList.toString();
         assertEquals(expectedString, resultString);
     }
 
+    @Test
+    // test for getContacts(int... ids)
+    public void throwIllegalArgumentExceptionWhenPassingNoIdsThroughGetContacts() {
+        boolean exceptionThrown = false;
+        try {
+            Set<Contact> contactSet = contactManager.getContacts();
+        } catch(IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
+
+    @Test
+    // test for getContacts(int... ids)
+    public void throwIllegalArgumentExceptionWhenPassingInvalidIdThrowGetContacts() {
+        boolean exceptionThrown = false;
+        try {
+            contactManager.getContacts(3, 5, 102020);
+        } catch (IllegalArgumentException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+    }
 
 }

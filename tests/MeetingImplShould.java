@@ -71,16 +71,5 @@ public class MeetingImplShould {
         assertEquals(100, meeting1.getContacts().size());
     }
 
-/* may not need these - DELETE LATER?
-    @Test
-    public void returnEmptyStringWhenCallingGetNotes() {
-        assertEquals("", pastMeeting.getNotes());
-    }
 
-
-    @Test void returnsNotesAfterAddingNotesToPastMeeting() {
-        pastMeeting.addNotes(notes);
-        assertEquals("These are some notes" + "\n", pastMeeting.getNotes() );
-    }
-    */
 }

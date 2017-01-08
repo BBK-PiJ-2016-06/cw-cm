@@ -31,18 +31,18 @@ public class ContactManagerImpl implements ContactManager{
 
     @Override
     public PastMeeting getPastMeeting (int id) throws IllegalStateException {
-        if (returnMeeting(futureMeetingList, id) != null ) {
+        if (returnMeetingById(futureMeetingList, id) != null ) {
             throw new IllegalStateException( "ID belongs to a Future Meeting");
         }
-        return returnMeeting(pastMeetingList, id);
+        return returnMeetingById(pastMeetingList, id);
     }
 
     @Override
     public FutureMeeting getFutureMeeting(int id) {
-        if (returnMeeting(pastMeetingList, id) != null ) {
+        if (returnMeetingById(pastMeetingList, id) != null ) {
             throw new IllegalStateException( "ID belongs to a Past Meeting");
         }
-        return returnMeeting(futureMeetingList, id);
+        return returnMeetingById(futureMeetingList, id);
     }
 
     @Override
@@ -61,9 +61,7 @@ public class ContactManagerImpl implements ContactManager{
         return returnsMeetingListByContact(futureMeetingList, contact);
     }
 
-    /**
-     * STILL NEED TO ADD CHRONOLOGICAL SORTING FUNCTIONALITY
-     */
+
     @Override
     public List<Meeting> getMeetingListOn(Calendar date) {
         Objects.requireNonNull(date, "Null Calendar");
@@ -152,9 +150,28 @@ public class ContactManagerImpl implements ContactManager{
      */
     @Override
     public Set<Contact> getContacts(int... ids) {
-
-        return null;
+        if (ids.length == 0) {
+            throw new IllegalArgumentException("No IDs provided");
+        }
+        Set<Contact> resultSet = new HashSet<>();
+        for (int i : ids) {
+            Contact contact = getContactById(i);
+            if (contact == null) {
+                throw new IllegalArgumentException("ID " + i + " does not exist.");
+            } else {
+                resultSet.add(contact);
+            }
+        }
+        return resultSet;
     }
+
+    private Contact getContactById(int id) {
+        return allKnownContacts.parallelStream()
+                                    .filter(c -> c.getId() == id)
+                                    .findAny()
+                                    .orElse(null);
+    }
+
 
     @Override
     public void flush() {
@@ -200,7 +217,7 @@ public class ContactManagerImpl implements ContactManager{
      * @return a meeting of the specified requirements or a null meeting if there is no
      *          meeting within the list
      */
-    private <T extends Meeting> T returnMeeting(List<T> meetingList, int id) {
+    private <T extends Meeting> T returnMeetingById(List<T> meetingList, int id) {
             return   meetingList.parallelStream()
                                 .filter(m -> m.getId() == id)
                                 .findFirst()
