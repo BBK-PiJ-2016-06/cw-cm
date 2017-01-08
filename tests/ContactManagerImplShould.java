@@ -649,6 +649,59 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
+    /**
+     * Returns the list of meetings that are scheduled for, or that took
+     * place on, the specified date
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param date the date
+     * @return the list of meetings
+     * @throws NullPointerException if the date are null
+     */
+    //
+    //public List<Meeting> getMeetingListOn(Calendar date) {
+
+    @Test
+    // test for getMeetingListOn(Calendar date)
+    public void returnMeetingListContainingTwoSpecifiedPastMeetingsByDate() {
+        Calendar uniqueOldDate = new GregorianCalendar(1862, 12, 15);
+        int idOfPastMeeting1 = contactManager.addNewPastMeeting(oddContacts, uniqueOldDate, "PastMeeting1");
+        int idOfPastMeeting2 = contactManager.addNewPastMeeting(oddContacts, uniqueOldDate, "PastMeeting2");
+        PastMeeting pastMeeting1 = contactManager.getPastMeeting(idOfPastMeeting1);
+        PastMeeting pastMeeting2 = contactManager.getPastMeeting(idOfPastMeeting2);
+        List<Meeting> resultList = contactManager.getMeetingListOn(uniqueOldDate);
+        assertTrue(resultList.contains(pastMeeting1));
+        assertTrue(resultList.contains(pastMeeting2));
+    }
+
+    @Test
+    // test for getMeetingListOn(Calendar date)
+    public void returnASortedPastMeetingListWhenCallingGetMeetingListOn() {
+        Calendar pastMeetingDate;
+        List<Integer> meetingIdsAsEntered = new ArrayList<>();
+        for (int i = 10; i > 0; i--) {
+            pastMeetingDate = new GregorianCalendar(1999, 04, 06, 17, 30);
+            meetingIdsAsEntered.add(contactManager.addNewPastMeeting(oddContacts, pastMeetingDate, "Meeting" + i));
+        }
+        //String deleteMe = meetingIdsAsEntered.toString();
+        //System.out.println(deleteMe);
+        //When running, uncomment those to see if it didn't sort itself to begin with.
+        meetingIdsAsEntered.sort(Comparator.comparingInt(Integer::intValue));
+        String expectedString = meetingIdsAsEntered.toString();
+        System.out.println(expectedString);
+        Calendar desiredDate = new GregorianCalendar(1999, 04, 06);
+        List<Meeting> resultMeetingList = contactManager.getMeetingListOn(desiredDate);
+        List<Integer> resultMeetingIdList = new ArrayList<>();
+        for (Meeting m : resultMeetingList) {
+            resultMeetingIdList.add(m.getId());
+        }
+        String resultString = resultMeetingIdList.toString();
+        assertEquals(expectedString, resultString);
+    }
+
 
 
 }
