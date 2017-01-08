@@ -662,25 +662,24 @@ public class ContactManagerImplShould {
         assertTrue(resultList.contains(pastMeeting2));
     }
 
-    // TEST IF CHECKS FOR SORTING BY TIME - NOT SURE HOW TO WRITE THIS IN TO CALLING METHOD.
     @Test
-    @Ignore
-    // test for getMeetingListOn(Calendar date)
+    /**
+     * test for getMeetingListOn(Calendar date)
+     * adds 10 meetings on one date at different times from latest to sooner
+     * gets their IDs and sorts them in to a list, then reverses them making List chronological.
+     * Then tests intended method, returning a list and extracting their ID's to a List<Integer>
+     * applies toString to both List<Integer> and insures equality
+     */
     public void returnASortedPastMeetingListWhenCallingGetMeetingListOn() {
-        Calendar pastMeetingDate;
         List<Integer> meetingIdsAsEntered = new ArrayList<>();
-        for (int i = 10; i > 0; i--) {
-            pastMeetingDate = new GregorianCalendar(1999, 04, 06, 17 + i, 30 + i);
+        for (int i = 10; i > 0; i--) { // creates meetings that go from furthest out to soonest
+           Calendar pastMeetingDate = new GregorianCalendar(1999, 04, 06, 12 + i, 30 + i);
             meetingIdsAsEntered.add(contactManager.addNewPastMeeting(oddContacts, pastMeetingDate, "Meeting" + i));
         }
-        List<Integer> reversedMeetings = new ArrayList<>();
-        for ( int i = 9; i > -1; i--) {
-            reversedMeetings.add(meetingIdsAsEntered.get(i));
-        }
-        String expectedString = reversedMeetings.toString(); // starts at 35, ends at 26
+        Collections.reverse(meetingIdsAsEntered); // reversing the list makes it chronological
+        String expectedString = meetingIdsAsEntered.toString();
 
-        Calendar desiredDate = new GregorianCalendar(1999, 04, 06);
-        List<Meeting> resultMeetingList = contactManager.getMeetingListOn(desiredDate);
+        List<Meeting> resultMeetingList = contactManager.getMeetingListOn(new GregorianCalendar(1999, 04, 06));
         List<Integer> resultMeetingIdList = new ArrayList<>();
         for (Meeting m : resultMeetingList) {
             resultMeetingIdList.add(m.getId());
