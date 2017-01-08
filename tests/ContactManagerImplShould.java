@@ -649,21 +649,6 @@ public class ContactManagerImplShould {
         assertTrue(exceptionThrown);
     }
 
-    /**
-     * Returns the list of meetings that are scheduled for, or that took
-     * place on, the specified date
-     *
-     * If there are none, the returned list will be empty. Otherwise,
-     * the list will be chronologically sorted and will not contain any
-     * duplicates.
-     *
-     * @param date the date
-     * @return the list of meetings
-     * @throws NullPointerException if the date are null
-     */
-    //
-    //public List<Meeting> getMeetingListOn(Calendar date) {
-
     @Test
     // test for getMeetingListOn(Calendar date)
     public void returnMeetingListContainingTwoSpecifiedPastMeetingsByDate() {
@@ -723,6 +708,20 @@ public class ContactManagerImplShould {
             exceptionThrown = true;
         }
         assertTrue(exceptionThrown);
+    }
+
+    @Test
+    // test for getContacts(int... ids)
+    public void returnASetOfContactsWithIdsMatchingThoseRequested() {
+        List<Integer> expectedIdList = new ArrayList<>();
+        for (int i = 1; i < 11; i++) { expectedIdList.add(i);}
+        String expectedString = expectedIdList.toString();
+
+        Set<Contact> resultContactSet = contactManager.getContacts(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<Integer> resultIdList = new ArrayList<>();
+        for ( Contact c : resultContactSet) { resultIdList.add(c.getId()); }
+        String resultString = resultIdList.toString();
+        assertEquals(expectedString, resultString);
     }
 
 

@@ -62,16 +62,7 @@ public class ContactManagerImpl implements ContactManager{
     }
 
     /**
-     * Returns the list of meetings that are scheduled for, or that took
-     * place on, the specified date
-     *
-     * If there are none, the returned list will be empty. Otherwise,
-     * the list will be chronologically sorted and will not contain any
-     * duplicates.
-     *
-     * @param date the date
-     * @return the list of meetings
-     * @throws NullPointerException if the date are null
+     * STILL NEED TO ADD CHRONOLOGICAL SORTING FUNCTIONALITY
      */
     @Override
     public List<Meeting> getMeetingListOn(Calendar date) {
@@ -155,9 +146,18 @@ public class ContactManagerImpl implements ContactManager{
         }
     }
 
-
+    /**
+     * Returns a set containing the contacts that correspond to the IDs.
+     * Note that this method can be used to retrieve just one contact by passing only one ID.
+     *
+     * @param ids an arbitrary number of contact IDs
+     * @return a set containing the contacts that correspond to the IDs.
+     * @throws IllegalArgumentException if no IDs are provided or if
+     *     any of the provided IDs does not correspond to a real contact
+     */
     @Override
     public Set<Contact> getContacts(int... ids) {
+
         return null;
     }
 
