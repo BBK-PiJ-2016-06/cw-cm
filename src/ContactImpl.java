@@ -63,6 +63,7 @@ public class ContactImpl implements Contact {
 
     /**
      * getter for allContactIdCounter private field
+     * @return the current int value of allContactIdCounter
      */
     public static int getAllContactIdCounter() {
         return allContactIdCounter;

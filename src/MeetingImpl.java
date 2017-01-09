@@ -44,15 +44,12 @@ public class MeetingImpl implements Meeting {
         return participants;
     }
 
-    /**
-     * Setter for date
-     *
-     * parameter date to replace previous value for this meeting
-     *
-     * @param newDate is a Calendar
-     */
-    public void rescheduleMeeting(Calendar newDate){
-        date = newDate;
+    public static void setAllMeetingIdCounter(int newId) {
+        allMeetingIdCounter = newId;
+    }
+
+    public static int getAllMeetingIdCounter() {
+        return allMeetingIdCounter;
     }
 
 }

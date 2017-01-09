@@ -17,18 +17,11 @@ import static org.junit.Assert.*;
 public class MeetingImplShould {
 
     private Meeting meeting1;
-    private MeetingImpl meeting2;
-    private PastMeeting pastMeeting;
     private Calendar futureDate;
     private Calendar pastDate;
     private Set<Contact> contacts;
-    String notes;
-    String emptyNotes;
 
-    @Test
-    public void name() throws Exception {
 
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -40,16 +33,16 @@ public class MeetingImplShould {
             contacts.add(person);
         }
         meeting1 = new MeetingImpl(contacts, futureDate);
-        meeting2 = new MeetingImpl(contacts, futureDate);
-        notes = "These are some notes";
-        emptyNotes = "";
-        pastMeeting = new PastMeetingImpl(contacts, pastDate);
     }
 
     @Test
-    public void return1And2ForMeetingId() {
-        assertEquals(1, meeting1.getId());
-        assertEquals(2, meeting2.getId());
+    public void returnMeetingsWithIdsOneHigherThanGetter() {
+        int expected = MeetingImpl.getAllMeetingIdCounter() + 1;
+        Meeting newMeeting = new MeetingImpl(contacts, futureDate);
+        assertEquals(expected, newMeeting.getId());
+        expected = MeetingImpl.getAllMeetingIdCounter() + 1;
+        newMeeting = new MeetingImpl(contacts, pastDate);
+        assertEquals(expected, newMeeting.getId());
     }
 
     @Test
@@ -60,16 +53,20 @@ public class MeetingImplShould {
     }
 
     @Test
-    public void changeDateFieldWhenCallingRescheduleMeeting(){
-        Calendar changedDate = new GregorianCalendar(2050, 07, 07);
-        meeting2.rescheduleMeeting(changedDate);
-        assertEquals(changedDate, meeting2.getDate());
-    }
-
-    @Test
     public void returnASizeOf100WhenCallingGetContacts() {
         assertEquals(100, meeting1.getContacts().size());
     }
 
+    @Test
+    // tests to make sure I can alter the static ID counter
+    // any new Meeting created after should be
+    public void createAContactWithAnID1HigherThanParamOfSetMax() {
+        MeetingImpl.setAllMeetingIdCounter(555);
+        Meeting newMeeting = new MeetingImpl(contacts, futureDate);
+        assertEquals(556, newMeeting.getId());
+        MeetingImpl.setAllMeetingIdCounter(0);
+        newMeeting = new MeetingImpl(contacts, pastDate);
+        assertEquals(1, newMeeting.getId());
+    }
 
 }
