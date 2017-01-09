@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -18,22 +19,16 @@ public class ContactManagerImplShould {
     private Set<Contact> contactSet1;
     private Calendar futureDate;
     private ContactManager contactManager;
-    private FutureMeeting futureMeeting;
     private Calendar dateInPast;
-    private PastMeeting pastMeeting;
     private Contact knownFutureContact;
     private Contact contactNotInFutureMeetings;
     private Set<Contact> evenContacts;
     private Set<Contact> oddContacts;
-    private List<Integer> intListForFutureMeetingList;
-    private List<Integer> intListForPastMeetingList;
-    private int lukeID;
 
     @Before
     public void setUp() throws Exception {
         contactManager = new ContactManagerImpl();
-        lukeID = contactManager.addNewContact("Luke Skywalker", "Nooooo!");
-        System.out.println("Luke's ID =" + lukeID);
+        contactManager.addNewContact("Luke Skywalker", "Nooooo!");
         contactManager.addNewContact("Darth Vader", "I am your father");
         futureDate = new GregorianCalendar(2050, 06, 06);
         knownFutureContact = contactManager.getContacts("")
@@ -50,7 +45,6 @@ public class ContactManagerImplShould {
             contactManager.addNewContact(("Name" + i), ("note" + i) );
         }
         dateInPast = new GregorianCalendar(1969, 06, 01);
-        pastMeeting = new PastMeetingImpl(contactSet1, dateInPast);
         evenContacts = contactManager.getContacts("").stream()
                                         .filter(c -> (c.getId() % 2 == 0) )
                                         .collect(Collectors.toSet());
@@ -58,19 +52,15 @@ public class ContactManagerImplShould {
                                     .stream()
                                     .filter(c -> (c.getId() % 2 != 0) )
                                     .collect(Collectors.toSet());
-        intListForFutureMeetingList = new ArrayList<>();
-        intListForPastMeetingList = new ArrayList<>();
         for(int j = 01; j<13; j++) {
             futureDate = new GregorianCalendar( 2112, j, j);
-            intListForFutureMeetingList.add(contactManager.addFutureMeeting(evenContacts, futureDate));
+            contactManager.addFutureMeeting(evenContacts, futureDate);
         }
         for(int j = 01; j<13; j++) {
             dateInPast = new GregorianCalendar( 1969, j, j);
-            intListForPastMeetingList.add
-                    (contactManager.addNewPastMeeting(oddContacts, dateInPast, "past meeting" + j));
+            contactManager.addNewPastMeeting(oddContacts, dateInPast, "past meeting" + j);
         }
         contactSet1 = contactManager.getContacts("");
-        System.out.println("All known contacts size = " + contactManager.getContacts("").size());
     }
 
     @After
@@ -720,19 +710,20 @@ public class ContactManagerImplShould {
 
     @Test
     // test for getContacts(int... ids)
-    public void returnASetOfContactsWithIdsMatchingThoseRequested() {
+    public void returnASetOfContactsWhoseIDsMatchThoseRequestedWhenCallingGetContacts() {
         List<Integer> expectedIdList = new ArrayList<>();
-        for (int i = 1; i < 11; i++) { expectedIdList.add(i);}
-        String expectedString = expectedIdList.toString();
-        System.out.println("Luke Array size" + contactManager.getContacts("Luke Skywalker").size());
-        Set<Contact> resultContactSet = contactManager.getContacts(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        List<Integer> resultIdList = new ArrayList<>();
-        for ( Contact c : resultContactSet) { resultIdList.add(c.getId()); }
+        for (int i = 1; i < 11; i++) {
+            expectedIdList.add(contactManager.addNewContact("Contact" + i, "Notes" + i));
+        }
+        int[] expectedIDArray = expectedIdList.stream().mapToInt(i->i).toArray();
+        Set<Contact> resultContactSet = contactManager.getContacts(expectedIDArray);
+        List<Integer> resultIdList = resultContactSet.stream()
+                                                     .mapToInt(Contact::getId)
+                                                     .boxed()
+                                                     .collect(Collectors.toList());
         Collections.sort(resultIdList);
-        String resultString = resultIdList.toString();
-        assertEquals(expectedString, resultString);
-    } // need to see whats up with this - every @Before recreates allKnownContacts, but the counter of all Contacts
-    // carries on - does not reset.
+        assertEquals(expectedIdList, resultIdList);
+    }
 
     @Test
     // test for getContacts(int... ids)
