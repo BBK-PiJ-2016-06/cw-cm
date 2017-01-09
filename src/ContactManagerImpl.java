@@ -1,5 +1,14 @@
-import java.util.*;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.Calendar;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Created by nathanhanak on 12/28/16.
@@ -7,11 +16,14 @@ import java.util.stream.Collectors;
  * A class to manage your contacts and meetings.
  *
  */
-public class ContactManagerImpl implements ContactManager{
+public class ContactManagerImpl implements ContactManager, Serializable {
 
     private Set<Contact> allKnownContacts = new HashSet<>();
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
+
+    private String saveFileName = "ContactManagerFile.txt";
+    private File file = new File(saveFileName);
 
 
     @Override
@@ -218,6 +230,11 @@ public class ContactManagerImpl implements ContactManager{
                             .sorted(Comparator.comparing(Meeting::getDate))
                             .collect(Collectors.toList());
     }
+
+    public String getSaveFileName() {
+        return saveFileName;
+    }
+
 
 
 }

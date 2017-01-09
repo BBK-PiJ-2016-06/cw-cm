@@ -22,7 +22,6 @@ public class MeetingImplShould {
     private Set<Contact> contacts;
 
 
-
     @Before
     public void setUp() throws Exception {
         futureDate = new GregorianCalendar(2050, 06, 06);

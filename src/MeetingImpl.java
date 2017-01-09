@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ import java.util.Set;
  * Meetings have unique IDs, scheduled date and a list of participating contacts
  */
 
-public class MeetingImpl implements Meeting {
+public class MeetingImpl implements Meeting, Serializable {
 
     private static int allMeetingIdCounter = 0;
     private int meetingId;
