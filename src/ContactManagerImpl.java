@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +23,31 @@ public class ContactManagerImpl implements ContactManager, Serializable {
 
     private String saveFileName = "ContactManagerFile.txt";
     private File file = new File(saveFileName);
+
+
+    public ContactManagerImpl() {
+        createFileIfNecessary();
+        try ( ObjectInputStream oIS = new ObjectInputStream(new FileInputStream(saveFileName))) {
+            allKnownContacts = (Set<Contact>)oIS.readObject();
+            futureMeetingList = (List<FutureMeeting>)oIS.readObject();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Class not found");
+            ex.printStackTrace();
+        }
+    }
+
+    private void createFileIfNecessary() {
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+                flush();
+            }
+        } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+    }
 
 
     @Override
@@ -168,7 +192,13 @@ public class ContactManagerImpl implements ContactManager, Serializable {
 
     @Override
     public void flush() {
-
+        try ( ObjectOutputStream oOS = new ObjectOutputStream(new FileOutputStream(saveFileName)) ) {
+            oOS.writeObject(allKnownContacts);
+            oOS.writeObject(futureMeetingList);
+            oOS.writeObject(pastMeetingList);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -231,9 +261,6 @@ public class ContactManagerImpl implements ContactManager, Serializable {
                             .collect(Collectors.toList());
     }
 
-    public String getSaveFileName() {
-        return saveFileName;
-    }
 
 
 
