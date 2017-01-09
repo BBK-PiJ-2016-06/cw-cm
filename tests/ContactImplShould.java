@@ -20,9 +20,11 @@ public class ContactImplShould {
     }
 
     @Test
-    public void returnIdOf1ForContact1(){
-        int result = contact1.getId();
-        assertEquals(1, result);
+    public void returnIdOneHigherThanIDCounterAfterCreatingNewContact(){
+        int expected = ContactImpl.getAllContactIdCounter() + 1;
+        Contact newContact = new ContactImpl("Han");
+        int result = newContact.getId();
+        assertEquals(expected, result);
     }
 
 
@@ -45,6 +47,18 @@ public class ContactImplShould {
     public void returnMessageWhenCallingGetNotesAfterAddingNotes() throws Exception {
         contact1.addNotes("Message");
         assertEquals("Message" + "\n", contact1.getNotes());
+    }
+
+    @Test
+    // tests to make sure I can alter the static ID counter
+    // any new Contact created after should be
+    public void createAContactWithAnID1HigherThanParamOfSetMax() {
+        ContactImpl.setAllContactIdCounter(555);
+        Contact newContact = new ContactImpl("Leia");
+        assertEquals(556, newContact.getId());
+        ContactImpl.setAllContactIdCounter(0);
+        newContact = new ContactImpl("Chewie");
+        assertEquals(1, newContact.getId());
     }
 
 

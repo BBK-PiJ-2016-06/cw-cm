@@ -60,4 +60,19 @@ public class ContactImpl implements Contact {
     public void addNotes(String note){
         cumulativeNotes += note + "\n";
     };
+
+    /**
+     * getter for allContactIdCounter private field
+     */
+    public static int getAllContactIdCounter() {
+        return allContactIdCounter;
+    }
+
+    /**
+     * setter for allContactIdCounter private field
+     * @param newCount the new value of allContactIdCounter
+     */
+    public static void setAllContactIdCounter(int newCount) {
+        allContactIdCounter = newCount;
+    }
 }

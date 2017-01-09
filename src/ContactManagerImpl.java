@@ -1,4 +1,3 @@
-import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -139,15 +138,7 @@ public class ContactManagerImpl implements ContactManager{
         }
     }
 
-    /**
-     * Returns a set containing the contacts that correspond to the IDs.
-     * Note that this method can be used to retrieve just one contact by passing only one ID.
-     *
-     * @param ids an arbitrary number of contact IDs
-     * @return a set containing the contacts that correspond to the IDs.
-     * @throws IllegalArgumentException if no IDs are provided or if
-     *     any of the provided IDs does not correspond to a real contact
-     */
+
     @Override
     public Set<Contact> getContacts(int... ids) {
         if (ids.length == 0) {
@@ -189,13 +180,7 @@ public class ContactManagerImpl implements ContactManager{
      * @return String containing the result of the operation
      */
     private String calendarOccursIn(Calendar calendarToCheck) {
-        Calendar currentDate = Calendar.getInstance();
-        String result = "future";
-        if (calendarToCheck.compareTo(currentDate) < 0) {
-            return "past";
-        } else {
-            return result;
-        }
+        return calendarToCheck.compareTo(Calendar.getInstance()) < 0 ? "past" : "future";
     }
 
     /**
@@ -216,11 +201,10 @@ public class ContactManagerImpl implements ContactManager{
 
     /**
      * Method which first checks if the contact is null, then
-     * returns a List<T extends Meeting> based on which type of List is passed through parameters
-     * containing all meetings with specified contact.
+     * returns a List<T extends Meeting> containing all meetings with specified contact.
      * @param meetingList a list of meetings to search.
      * @param contact a specified contact whose participating meetings we are searching for
-     * @param <? extends T> Meeting. A List of an type that is an extension of Meeting.
+     * @param <? extends T> Meeting. A List of a type that is an extension of Meeting.
      * @return List<T extends Meeting> a list of all meetings in time frame containing contact
      * @throws IllegalArgumentException if the contact is not contained in allKnownContacts.
      * @throws NullPointerException if the contact is null
