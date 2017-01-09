@@ -153,25 +153,15 @@ public class ContactManagerImpl implements ContactManager{
         if (ids.length == 0) {
             throw new IllegalArgumentException("No IDs provided");
         }
-        Set<Contact> resultSet = new HashSet<>();
-        for (int i : ids) {
-            Contact contact = getContactById(i);
-            if (contact == null) {
-                throw new IllegalArgumentException("ID " + i + " does not exist.");
-            } else {
-                resultSet.add(contact);
-            }
+        Set<Contact> resultSet = allKnownContacts.stream()
+                                                 .filter(p -> (Arrays.stream(ids).anyMatch(i -> i == p.getId())) )
+                                                 .collect(Collectors.toSet());
+        if (resultSet.size() != ids.length ) {
+            throw new IllegalArgumentException("Passed a non-existent ID");
+        } else {
+            return resultSet;
         }
-        return resultSet;
     }
-
-    private Contact getContactById(int id) {
-        return allKnownContacts.parallelStream()
-                                    .filter(c -> c.getId() == id)
-                                    .findAny()
-                                    .orElse(null);
-    }
-
 
     @Override
     public void flush() {

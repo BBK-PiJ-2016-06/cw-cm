@@ -731,7 +731,8 @@ public class ContactManagerImplShould {
         Collections.sort(resultIdList);
         String resultString = resultIdList.toString();
         assertEquals(expectedString, resultString);
-    }
+    } // need to see whats up with this - every @Before recreates allKnownContacts, but the counter of all Contacts
+    // carries on - does not reset.
 
     @Test
     // test for getContacts(int... ids)
@@ -750,7 +751,8 @@ public class ContactManagerImplShould {
     public void throwIllegalArgumentExceptionWhenPassingInvalidIdThrowGetContacts() {
         boolean exceptionThrown = false;
         try {
-            contactManager.getContacts(3, 5, 102020);
+            Set<Contact> resultSet = contactManager.getContacts(3, 5, 102020);
+            System.out.println(resultSet.size() + " is the size of contactSet ");
         } catch (IllegalArgumentException ex) {
             exceptionThrown = true;
         }
