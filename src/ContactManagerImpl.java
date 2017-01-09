@@ -30,6 +30,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         try ( ObjectInputStream oIS = new ObjectInputStream(new FileInputStream(saveFileName))) {
             allKnownContacts = (Set<Contact>)oIS.readObject();
             futureMeetingList = (List<FutureMeeting>)oIS.readObject();
+            pastMeetingList = (List<PastMeeting>)oIS.readObject();
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -38,6 +39,11 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         }
     }
 
+    /**
+     * method which runs on first Launch of a new ContactManagerImpl
+     * Runs if the expected file has not been created or
+     * if it was deleted previously, it will create a new blank one
+     */
     private void createFileIfNecessary() {
         try {
             if (!file.exists()) {
@@ -170,6 +176,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         } else {
             return  allKnownContacts.parallelStream()
                                     .filter(c -> c.getName().equals(name))
+                                    .sorted(Comparator.comparing(Contact::getId))
                                     .collect(Collectors.toSet());
         }
     }
@@ -182,6 +189,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         }
         Set<Contact> resultSet = allKnownContacts.stream()
                                                  .filter(p -> (Arrays.stream(ids).anyMatch(i -> i == p.getId())) )
+                                                 .sorted(Comparator.comparing(Contact::getId))
                                                  .collect(Collectors.toSet());
         if (resultSet.size() != ids.length ) {
             throw new IllegalArgumentException("Passed a non-existent ID");
