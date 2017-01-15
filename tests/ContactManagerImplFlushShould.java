@@ -3,10 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.GregorianCalendar;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -29,7 +26,7 @@ public class ContactManagerImplFlushShould {
     public void setUp() throws Exception {
         myContactManager = new ContactManagerImpl();
         for (int i = 0; i < 1000; i++) {
-            myContactManager.addNewContact("Name + 1", "Notes " + i);
+            myContactManager.addNewContact("Name " + i, "Notes " + i);
         }
         futureDate = new GregorianCalendar(2112, 12, 06);
         pastDate = new GregorianCalendar(1969, 11, 12);
@@ -59,11 +56,12 @@ public class ContactManagerImplFlushShould {
         myContactManager.flush();
         contactManager2 = new ContactManagerImpl();
         Set<Contact> resultContacts = contactManager2.getFutureMeeting(futureMeetingId).getContacts();
-        resultContacts = resultContacts.stream()
+        List<Contact> resultsArrayList = new ArrayList<>();
+        resultsArrayList = resultContacts.stream()
                                        .sorted(Comparator.comparingInt(Contact::getId))
-                                       .collect(Collectors.toSet()); // need to guarantee order
+                                       .collect(Collectors.toList()); // need to guarantee order
         String resultString = "";
-        for (Contact c : resultContacts) {
+        for (Contact c : resultsArrayList) {
             resultString += c.getId();
         }
         assertEquals(expectedString, resultString);
@@ -76,11 +74,12 @@ public class ContactManagerImplFlushShould {
         myContactManager.flush();
         contactManager2 = new ContactManagerImpl();
         Set<Contact> resultContacts = contactManager2.getPastMeeting(pastMeetingId).getContacts();
-        resultContacts = resultContacts.stream()
+        List<Contact> resultsArrayList = new ArrayList<>();
+        resultsArrayList = resultContacts.stream()
                                        .sorted(Comparator.comparingInt(Contact::getId))
-                                       .collect(Collectors.toSet()); // need to guarantee order
+                                       .collect(Collectors.toList()); // need to guarantee order
         String resultString = "";
-        for (Contact c : resultContacts) {
+        for (Contact c : resultsArrayList) {
             resultString += c.getId();
         }
         assertEquals(expectedString, resultString);
