@@ -85,4 +85,29 @@ public class ContactManagerImplFlushShould {
         assertEquals(expectedString, resultString);
     }
 
+
+
+    @Test
+    public void convertAFutureMeetingToAPastMeetingWhenItsDateBecomesThePast() {
+        Calendar currentTimePlus8sec = Calendar.getInstance();
+        currentTimePlus8sec.add(Calendar.SECOND,  8);
+        int futureMeetId = myContactManager.addFutureMeeting(contactSet, currentTimePlus8sec);
+        try {
+            for (int i = 0; i < 8; i++) {
+                System.out.println("Sleeping..." + (8 - (i)));
+                Thread.sleep(1001);
+            }
+        } catch (InterruptedException ex) {
+            System.out.println("Was interrupted!");
+        }
+        myContactManager.flush();
+        boolean exceptionThrown = false;
+        try {
+            myContactManager.getFutureMeeting(futureMeetId)
+        } catch (IllegalStateException ex) {
+            exceptionThrown = true;
+        }
+        assertTrue(exceptionThrown);
+
+    }
 }

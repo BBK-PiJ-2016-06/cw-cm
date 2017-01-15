@@ -31,6 +31,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
             allKnownContacts = (Set<Contact>)oIS.readObject();
             futureMeetingList = (List<FutureMeeting>)oIS.readObject();
             pastMeetingList = (List<PastMeeting>)oIS.readObject();
+            convertExpiredFutureMeetings();
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -53,6 +54,14 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         } catch (IOException ex) {
                 ex.printStackTrace();
             }
+    }
+
+    /**
+     * Method which runs every time constructor or flush is called. Checks to see
+     * if any of the dates in futureMeetingList have past.
+     */
+    private void convertExpiredFutureMeetings() {
+
     }
 
 
@@ -201,6 +210,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
     @Override
     public void flush() {
         try ( ObjectOutputStream oOS = new ObjectOutputStream(new FileOutputStream(saveFileName)) ) {
+            convertExpiredFutureMeetings();
             oOS.writeObject(allKnownContacts);
             oOS.writeObject(futureMeetingList);
             oOS.writeObject(pastMeetingList);
