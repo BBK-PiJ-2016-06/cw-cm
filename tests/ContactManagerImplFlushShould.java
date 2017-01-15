@@ -85,12 +85,11 @@ public class ContactManagerImplFlushShould {
         assertEquals(expectedString, resultString);
     }
 
-
     @Test
-    public void convertAFutureMeetingToAPastMeetingWhenItsDateBecomesThePast() {
-        Calendar currentTimePlus8sec = Calendar.getInstance();
-        currentTimePlus8sec.add(Calendar.SECOND,  5);
-        int futureMeetId = myContactManager.addFutureMeeting(contactSet, currentTimePlus8sec);
+    public void returnNullWhenCallingGetFutureMeetingOfAnExpiredFutureMeetingAfterFlush() {
+        Calendar currentTimePlus5sec = Calendar.getInstance();
+        currentTimePlus5sec.add(Calendar.SECOND,  5);
+        int futureMeetId = myContactManager.addFutureMeeting(contactSet, currentTimePlus5sec);
         try {
             for (int i = 0; i < 5; i++) {
                 System.out.println("Sleeping..." + (5 - (i)));
@@ -100,13 +99,20 @@ public class ContactManagerImplFlushShould {
             System.out.println("Was interrupted!");
         }
         myContactManager.flush();
-        boolean exceptionThrown = false;
-        try {
-            myContactManager.getFutureMeeting(futureMeetId);
-        } catch (IllegalStateException ex) {
-            exceptionThrown = true;
+        assertNull(myContactManager.getFutureMeeting(futureMeetId));
+    }
+
+    @Test
+    public void storeLastMeetingIdAndReturnItWhenCallingNewConstructor(){
+        int expectedMeetingId = MeetingImpl.getAllMeetingIdCounter() + 1;
+        myContactManager.flush();
+        contactManager2 = new ContactManagerImpl();
+        for( int i = 0; i < 10 ; i++) {
+            contactManager2.addNewContact("Dude#" + i, "notes" + i);
         }
-        assertTrue(exceptionThrown);
+        Set<Contact> allCM2Contacts = contactManager2.getContacts("");
+        int resultId = contactManager2.addFutureMeeting(allCM2Contacts, futureDate);
+        assertEquals(expectedMeetingId, resultId);
     }
 
 }

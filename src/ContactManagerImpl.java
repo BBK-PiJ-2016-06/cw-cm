@@ -1,14 +1,7 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.spi.CalendarDataProvider;
 import java.util.stream.Collectors;
-import java.util.Objects;
-import java.util.Calendar;
-import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * Created by nathanhanak on 12/28/16.
@@ -21,7 +14,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
     private Set<Contact> allKnownContacts = new HashSet<>();
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
-
+    private List<Integer> savedIdList = new ArrayList<>(Arrays.asList(0, 0)); // [0]= Meeting, [1]= Contact
     private String saveFileName = "ContactManagerFile.txt";
     private File file = new File(saveFileName);
 
@@ -32,6 +25,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
             allKnownContacts = (Set<Contact>)oIS.readObject();
             futureMeetingList = (List<FutureMeeting>)oIS.readObject();
             pastMeetingList = (List<PastMeeting>)oIS.readObject();
+            savedIdList = (List<Integer>)oIS.readObject();
             convertExpiredFutureMeetings();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -39,6 +33,17 @@ public class ContactManagerImpl implements ContactManager, Serializable {
             System.out.println("Class not found");
             ex.printStackTrace();
         }
+        calibrateMeetingAndContactIds();
+    }
+
+    /**
+     * Called when creating a new ContactManagerImpl
+     * Synchronizes MeetingImpl and ContactImpl static ID counters
+     * to their last values - when flush() was last called.
+     */
+    private void calibrateMeetingAndContactIds() {
+        MeetingImpl.setAllMeetingIdCounter(savedIdList.get(0));
+        ContactImpl.setAllContactIdCounter(savedIdList.get(1));
     }
 
     /**
@@ -67,7 +72,6 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         futureMeetingList.parallelStream()
                             .filter(m -> m.getDate().compareTo(current) < 0)
                             .forEach(f -> addNewPastMeeting(f.getContacts(), f.getDate(), "Meeting complete"));
-        System.out.println("Finished this");
         trimExpiredFutureMeetings(current);
     }
 
@@ -76,9 +80,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
      * @param current Calendar object reflecting exact local time method called
      */
     private void trimExpiredFutureMeetings(Calendar current) {
-        futureMeetingList.parallelStream()
-                .filter(m -> m.getDate().compareTo(current) < 0)
-                .forEach(f -> futureMeetingList.remove(f));
+        futureMeetingList.removeIf(m -> m.getDate().compareTo(current) < 0);
     }
 
     @Override
@@ -225,15 +227,26 @@ public class ContactManagerImpl implements ContactManager, Serializable {
 
     @Override
     public void flush() {
+        saveLatestMeetingAndContactIds();
         try ( ObjectOutputStream oOS = new ObjectOutputStream(new FileOutputStream(saveFileName)) ) {
             convertExpiredFutureMeetings();
             oOS.writeObject(allKnownContacts);
             oOS.writeObject(futureMeetingList);
             oOS.writeObject(pastMeetingList);
+            oOS.writeObject(savedIdList);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
+    /**
+     * Method which saves static id counters of associated classes
+     */
+    private void saveLatestMeetingAndContactIds() {
+        savedIdList.set(0, MeetingImpl.getAllMeetingIdCounter());
+        savedIdList.set(1, ContactImpl.getAllContactIdCounter());
+    }
+
 
     /**
      * Method which checks if a contact has previously been created by
