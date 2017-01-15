@@ -1,3 +1,5 @@
+package main.java.NHanak.cwcm;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Set;
@@ -18,9 +20,9 @@ public class MeetingImpl implements Meeting, Serializable {
     private Set<Contact> participants;
 
     /**
-     * Constructor for MeetingImpl
+     * Constructor for main.java.NHanak.cwcm.MeetingImpl
      *
-     * @param contacts : a set of type Contact for this meeting
+     * @param contacts : a set of type main.java.NHanak.cwcm.Contact for this meeting
      * @param date : a calendar indicating the scheduled date of the meeting
      */
     public MeetingImpl(Set<Contact> contacts, Calendar date) {

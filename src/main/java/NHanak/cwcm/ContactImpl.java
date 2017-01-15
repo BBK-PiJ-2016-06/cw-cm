@@ -1,3 +1,5 @@
+package main.java.NHanak.cwcm;
+
 import java.io.Serializable;
 
 /**

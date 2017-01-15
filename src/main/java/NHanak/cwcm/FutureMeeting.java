@@ -1,3 +1,5 @@
+package main.java.NHanak.cwcm;
+
 /**
  * A meeting to be held in the future
  */
