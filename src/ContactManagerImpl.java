@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.spi.CalendarDataProvider;
 import java.util.stream.Collectors;
 import java.util.Objects;
 import java.util.Calendar;
@@ -58,12 +59,27 @@ public class ContactManagerImpl implements ContactManager, Serializable {
 
     /**
      * Method which runs every time constructor or flush is called. Checks to see
-     * if any of the dates in futureMeetingList have past.
+     * if any of the dates in futureMeetingList have past and adds them
+     * to pastMeetingList
      */
     private void convertExpiredFutureMeetings() {
-
+        Calendar current = Calendar.getInstance();
+        futureMeetingList.parallelStream()
+                            .filter(m -> m.getDate().compareTo(current) < 0)
+                            .forEach(f -> addNewPastMeeting(f.getContacts(), f.getDate(), "Meeting complete"));
+        System.out.println("Finished this");
+        trimExpiredFutureMeetings(current);
     }
 
+    /**
+     * Culls futureMeetingList of any FutureMeeting objects with dates occurring in past
+     * @param current Calendar object reflecting exact local time method called
+     */
+    private void trimExpiredFutureMeetings(Calendar current) {
+        futureMeetingList.parallelStream()
+                .filter(m -> m.getDate().compareTo(current) < 0)
+                .forEach(f -> futureMeetingList.remove(f));
+    }
 
     @Override
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException {
