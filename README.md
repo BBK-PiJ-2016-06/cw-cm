@@ -16,4 +16,6 @@ it will reload all previously stored information upon re-opening the program. Th
 also check to see if any Future meetings have "expired" or passed their deadlines and promptly 
 convert them in to a past meeting.
 
-
+Due to the heavy reliance on Java collection classes, many methods were completed using Java 8 techniques.
+Since many of ContactManager's interface methods were very similar, several additional Private
+methods were created to uphold the DRY principle. 
