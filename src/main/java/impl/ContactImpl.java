@@ -1,4 +1,6 @@
-package main.java.NHanak.cwcm;
+package main.java.impl;
+
+import main.java.spec.Contact;
 
 import java.io.Serializable;
 

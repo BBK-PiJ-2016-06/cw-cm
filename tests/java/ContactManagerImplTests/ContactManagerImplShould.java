@@ -1,6 +1,10 @@
-package main.java.NHanak.cwcm.ContactManagerImplTests;
+package java.ContactManagerImplTests;
 
-import main.java.NHanak.cwcm.*;
+import main.java.impl.ContactImpl;
+import main.java.impl.ContactManagerImpl;
+import main.java.impl.FutureMeetingImpl;
+import main.java.impl.MeetingImpl;
+import main.java.spec.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Created by nathanhanak on 12/28/16.
  *
- * Test class for main.java.NHanak.cwcm.ContactManagerImpl
+ * Test class for main.java.impl.ContactManagerImpl
  */
 public class ContactManagerImplShould {
 
@@ -70,7 +74,7 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    // tests addFutureMeeting(Set<main.java.NHanak.cwcm.Contact> , Calendar)
+    // tests addFutureMeeting(Set<main.java.spec.Contact> , Calendar)
     public void returnExpectedIntWhenCallingAddFutureMeeting() {
         FutureMeeting randomMeeting = new FutureMeetingImpl(contactSet1, futureDate);
         int expected = randomMeeting.getId() + 1;
@@ -78,7 +82,7 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    // test for addFutureMeeting(Set<main.java.NHanak.cwcm.Contact> , Calendar)
+    // test for addFutureMeeting(Set<main.java.spec.Contact> , Calendar)
     public void throwIllegalArgExceptionWhenPassingPastDate(){
         boolean exceptionThrown = false;
         try {
@@ -92,7 +96,7 @@ public class ContactManagerImplShould {
     @Test
     /**
      * tests for addNewContact(String, String)
-     * @return an int of newly created main.java.NHanak.cwcm.Contact
+     * @return an int of newly created main.java.spec.Contact
      */
     public void returnAnIntWhenCallingAddNewContact() {
         Contact placeHolderContact = new ContactImpl("a name");
@@ -144,7 +148,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Tests addNewContact successfully adds a contact to Set<main.java.NHanak.cwcm.Contact> allKnownContacts
+     * Tests addNewContact successfully adds a contact to Set<main.java.spec.Contact> allKnownContacts
      */
     public void containNewlyCreatedContact() {
         contactManager.addNewContact("Princess Leia", "heroine");
@@ -156,7 +160,7 @@ public class ContactManagerImplShould {
     @Test
     /**
      * tests addFutureMeeting to see if it throws IllegalArgumentException
-     * when a contact in @param Set<main.java.NHanak.cwcm.Contact> isn't known
+     * when a contact in @param Set<main.java.spec.Contact> isn't known
      */
     public void throwIllegalArgumentExceptionWhenPassingUnknownContactToAddFutureMeeting(){
         boolean exceptionThrown = false;
@@ -196,7 +200,7 @@ public class ContactManagerImplShould {
     @Test
     /**
      * tests addNewPastMeeting to see if it throws IllegalArgumentException
-     * when a contact in @param Set<main.java.NHanak.cwcm.Contact> isn't known
+     * when a contact in @param Set<main.java.spec.Contact> isn't known
      */
     public void throwIllegalArgumentExceptionWhenPassingUnknownContactToAddNewPastMeeting(){
         boolean exceptionThrown = false;
@@ -225,7 +229,7 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    // test for addNewPastMeeting(Set<main.java.NHanak.cwcm.Contact> , Calendar, String notes)
+    // test for addNewPastMeeting(Set<main.java.spec.Contact> , Calendar, String notes)
     public void throwIllegalArgExceptionWhenPassingFutureDateToAddNewPastMeeting(){
         boolean exceptionThrown = false;
         try {
@@ -237,7 +241,7 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    // test for addNewPastMeeting(Set<main.java.NHanak.cwcm.Contact> , Calendar, String notes)
+    // test for addNewPastMeeting(Set<main.java.spec.Contact> , Calendar, String notes)
     public void throwIllegalArgExceptionWhenPassingEmptyContactSetToAddNewPastMeeting(){
         boolean exceptionThrown = false;
         Set<Contact> emptyContact = new HashSet<>();
@@ -250,7 +254,7 @@ public class ContactManagerImplShould {
     }
 
     @Test
-    // test for addNewPastMeeting(Set<main.java.NHanak.cwcm.Contact> , Calendar, String notes)
+    // test for addNewPastMeeting(Set<main.java.spec.Contact> , Calendar, String notes)
     public void throwNullPointerExceptionIfAnyParamsForAddNewPastMeetingAreNull(){
         boolean nullPointerThrown = false;
         String someNotes = "here are some notes";
@@ -397,7 +401,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getFutureMeetingList(main.java.NHanak.cwcm.Contact);
+     * Test for getFutureMeetingList(main.java.spec.Contact);
      */
     public void returnAListOfFutureMeetingsContainingKnownContactWhenCallingGetFutureMeetingList() {
         List<Meeting> resultMeetingList = contactManager.getFutureMeetingList(knownFutureContact);
@@ -413,7 +417,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getFutureMeetingList(main.java.NHanak.cwcm.Contact);
+     * Test for getFutureMeetingList(main.java.spec.Contact);
      */
     public void returnsAnEmptyListIfContactIsNotContainedInAnyFutureMeetings() {
         List<Meeting> emptyList = contactManager.getFutureMeetingList(contactNotInFutureMeetings);
@@ -422,7 +426,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getFutureMeetingList(main.java.NHanak.cwcm.Contact);
+     * Test for getFutureMeetingList(main.java.spec.Contact);
      */
     public void throwNullPointerExceptionWhenPassingANullContactThroughGetFutureMeetingList() {
         Contact nullContact = null;
@@ -437,7 +441,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getFutureMeetingList(main.java.NHanak.cwcm.Contact);
+     * Test for getFutureMeetingList(main.java.spec.Contact);
      */
     public void throwIllegalArgumentExceptionWhenCallingGetFutureMeetingWithUnknownContact() {
         Contact unknownContact = new ContactImpl("Name");
@@ -452,11 +456,11 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getFutureMeetingList(main.java.NHanak.cwcm.Contact);
-     * adds a new main.java.NHanak.cwcm.Meeting that is chronologically before any meetings added in @Before
+     * Test for getFutureMeetingList(main.java.spec.Contact);
+     * adds a new main.java.spec.Meeting that is chronologically before any meetings added in @Before
      * retrieves the Id of that meeting
-     * calls getFutureMeetingList and builds a result List<main.java.NHanak.cwcm.Meeting>
-     * iterate over every main.java.NHanak.cwcm.Meeting in List, calling getId and adding to new List<Integer>
+     * calls getFutureMeetingList and builds a result List<main.java.spec.Meeting>
+     * iterate over every main.java.spec.Meeting in List, calling getId and adding to new List<Integer>
      * First element should match the Id of earliestMeetingId
      */
     public void returnAListThatIsChronologicallySortedWhenCallingGetFutureMeeting() {
@@ -477,7 +481,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getPastMeetingListFor(main.java.NHanak.cwcm.Contact);
+     * Test for getPastMeetingListFor(main.java.spec.Contact);
      */
     public void returnAListOfPastMeetingsContainingKnownContactWhenCallingGetPastMeetingList() {
         List<PastMeeting> resultMeetingList = contactManager.getPastMeetingListFor(contactNotInFutureMeetings);
@@ -493,7 +497,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getPastMeetingListFor(main.java.NHanak.cwcm.Contact);
+     * Test for getPastMeetingListFor(main.java.spec.Contact);
      */
     public void returnsAnEmptyListIfContactIsNotContainedInAnyPastMeetings() {
         contactManager.addNewContact("Boba Fett", "Not in past meetings");
@@ -508,7 +512,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getPastMeetingListFor(main.java.NHanak.cwcm.Contact);
+     * Test for getPastMeetingListFor(main.java.spec.Contact);
      */
     public void throwNullPointerExceptionWhenPassingANullContactToGetPastMeetingFor() {
         Contact nullContact = null;
@@ -523,7 +527,7 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getPastMeetingListFor(main.java.NHanak.cwcm.Contact);
+     * Test for getPastMeetingListFor(main.java.spec.Contact);
      */
     public void throwIllegalArgumentExceptionWhenCallingGetPastMeetingForWithUnknownContact() {
         Contact unknownContact = new ContactImpl("Name");
@@ -538,11 +542,11 @@ public class ContactManagerImplShould {
 
     @Test
     /**
-     * Test for getPastMeetingListFor(main.java.NHanak.cwcm.Contact);
-     * adds a new main.java.NHanak.cwcm.Meeting that is chronologically before any meetings added in @Before
+     * Test for getPastMeetingListFor(main.java.spec.Contact);
+     * adds a new main.java.spec.Meeting that is chronologically before any meetings added in @Before
      * retrieves the Id of that meeting
-     * calls getPastMeetingListFor(main.java.NHanak.cwcm.Contact) and builds a result List<main.java.NHanak.cwcm.PastMeeting>
-     * iterate over every main.java.NHanak.cwcm.Meeting in List, calling getId and adding to new List<Integer>
+     * calls getPastMeetingListFor(main.java.spec.Contact) and builds a result List<main.java.spec.PastMeeting>
+     * iterate over every main.java.spec.Meeting in List, calling getId and adding to new List<Integer>
      * First element should match the Id of earliestMeetingId
      */
     public void returnAListThatIsChronologicallySortedWhenCallingGetPastMeetingListFor() {
@@ -674,7 +678,7 @@ public class ContactManagerImplShould {
         List<Integer> meetingIdsAsEntered = new ArrayList<>();
         for (int i = 10; i > 0; i--) { // creates meetings that go from furthest out to soonest
            Calendar pastMeetingDate = new GregorianCalendar(1999, 04, 06, 12 + i, 30 + i);
-            meetingIdsAsEntered.add(contactManager.addNewPastMeeting(oddContacts, pastMeetingDate, "main.java.NHanak.cwcm.Meeting" + i));
+            meetingIdsAsEntered.add(contactManager.addNewPastMeeting(oddContacts, pastMeetingDate, "main.java.spec.Meeting" + i));
         }
         Collections.reverse(meetingIdsAsEntered); // reversing the list makes it chronological
         String expectedString = meetingIdsAsEntered.toString();
@@ -714,7 +718,7 @@ public class ContactManagerImplShould {
     public void returnASetOfContactsWhoseIDsMatchThoseRequestedWhenCallingGetContacts() {
         List<Integer> expectedIdList = new ArrayList<>();
         for (int i = 1; i < 11; i++) {
-            expectedIdList.add(contactManager.addNewContact("main.java.NHanak.cwcm.Contact" + i, "Notes" + i));
+            expectedIdList.add(contactManager.addNewContact("main.java.spec.Contact" + i, "Notes" + i));
         }
         int[] expectedIDArray = expectedIdList.stream().mapToInt(i->i).toArray();
         Set<Contact> resultContactSet = contactManager.getContacts(expectedIDArray);

@@ -1,4 +1,4 @@
-package main.java.NHanak.cwcm;
+package main.java.spec;
 
 import java.util.Calendar;
 import java.util.List;

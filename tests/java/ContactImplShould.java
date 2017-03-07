@@ -1,14 +1,14 @@
-package main.java.NHanak.cwcm;
+package java;
 
-import main.java.NHanak.cwcm.Contact;
-import main.java.NHanak.cwcm.ContactImpl;
+import main.java.impl.ContactImpl;
+import main.java.spec.Contact;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Testing class for main.java.NHanak.cwcm.ContactImpl
+ * Testing class for main.java.impl.ContactImpl
  */
 
 
@@ -55,7 +55,7 @@ public class ContactImplShould {
 
     @Test
     // tests to make sure I can alter the static ID counter
-    // any new main.java.NHanak.cwcm.Contact created after should be
+    // any new main.java.spec.Contact created after should be
     public void createAContactWithAnID1HigherThanParamOfSetMax() {
         ContactImpl.setAllContactIdCounter(555);
         Contact newContact = new ContactImpl("Leia");

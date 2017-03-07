@@ -1,9 +1,9 @@
-package main.java.NHanak.cwcm;
+package java;
 
-import main.java.NHanak.cwcm.Contact;
-import main.java.NHanak.cwcm.ContactImpl;
-import main.java.NHanak.cwcm.Meeting;
-import main.java.NHanak.cwcm.MeetingImpl;
+import main.java.impl.ContactImpl;
+import main.java.impl.MeetingImpl;
+import main.java.spec.Contact;
+import main.java.spec.Meeting;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by nathanhanak on 12/27/16.
  *
- * Test Class to test Methods of main.java.NHanak.cwcm.MeetingImpl
+ * Test Class to test Methods of main.java.impl.MeetingImpl
  */
 public class MeetingImplShould {
 
@@ -63,7 +63,7 @@ public class MeetingImplShould {
 
     @Test
     // tests to make sure I can alter the static ID counter
-    // any new main.java.NHanak.cwcm.Meeting created after should be
+    // any new main.java.spec.Meeting created after should be
     public void createAContactWithAnID1HigherThanParamOfSetMax() {
         MeetingImpl.setAllMeetingIdCounter(555);
         Meeting newMeeting = new MeetingImpl(contacts, futureDate);

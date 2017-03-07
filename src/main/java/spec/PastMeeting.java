@@ -1,4 +1,4 @@
-package main.java.NHanak.cwcm;
+package main.java.spec;
 
 /**
  * A meeting that was held in the past.

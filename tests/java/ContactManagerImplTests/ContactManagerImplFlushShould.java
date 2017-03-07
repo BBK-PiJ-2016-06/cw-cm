@@ -1,9 +1,9 @@
-package main.java.NHanak.cwcm.ContactManagerImplTests;
+package java.ContactManagerImplTests;
 
-import main.java.NHanak.cwcm.Contact;
-import main.java.NHanak.cwcm.ContactManager;
-import main.java.NHanak.cwcm.ContactManagerImpl;
-import main.java.NHanak.cwcm.MeetingImpl;
+import main.java.spec.Contact;
+import main.java.spec.ContactManager;
+import main.java.impl.ContactManagerImpl;
+import main.java.impl.MeetingImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

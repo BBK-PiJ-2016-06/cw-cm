@@ -1,4 +1,7 @@
-package main.java.NHanak.cwcm;
+package main.java.impl;
+
+import main.java.spec.Contact;
+import main.java.spec.FutureMeeting;
 
 import java.io.Serializable;
 import java.util.Calendar;
