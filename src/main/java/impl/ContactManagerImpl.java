@@ -1,6 +1,6 @@
-package main.java.impl;
+package impl;
 
-import main.java.spec.*;
+import spec.*;
 
 import java.io.*;
 import java.util.*;

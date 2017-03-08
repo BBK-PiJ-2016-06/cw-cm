@@ -1,4 +1,4 @@
-package main.java.spec;
+package spec;
 
 /**
  * A meeting that was held in the past.

@@ -1,7 +1,7 @@
-package main.java.impl;
+package impl;
 
-import main.java.spec.Contact;
-import main.java.spec.Meeting;
+import spec.Contact;
+import spec.Meeting;
 
 import java.io.Serializable;
 import java.util.Calendar;

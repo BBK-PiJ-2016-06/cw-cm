@@ -1,7 +1,5 @@
-package java;
-
-import main.java.impl.ContactImpl;
-import main.java.spec.Contact;
+import impl.ContactImpl;
+import spec.Contact;
 import org.junit.Before;
 import org.junit.Test;
 

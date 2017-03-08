@@ -1,9 +1,9 @@
-package java.ContactManagerImplTests;
+package ContactManagerImplTests;
 
-import main.java.spec.Contact;
-import main.java.spec.ContactManager;
-import main.java.impl.ContactManagerImpl;
-import main.java.impl.MeetingImpl;
+import spec.Contact;
+import spec.ContactManager;
+import impl.ContactManagerImpl;
+import impl.MeetingImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,7 +96,7 @@ public class ContactManagerImplFlushShould {
         Calendar currentTimePlus5sec = Calendar.getInstance();
         currentTimePlus5sec.add(Calendar.SECOND,  5);
         int futureMeetId = myContactManager.addFutureMeeting(contactSet, currentTimePlus5sec);
-        try {
+        try { // need to sleep to allow future meeting to become a past meeting
             for (int i = 0; i < 5; i++) {
                 System.out.println("Sleeping..." + (5 - (i)));
                 Thread.sleep(1001);

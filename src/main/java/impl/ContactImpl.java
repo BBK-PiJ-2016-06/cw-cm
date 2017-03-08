@@ -1,6 +1,6 @@
-package main.java.impl;
+package impl;
 
-import main.java.spec.Contact;
+import spec.Contact;
 
 import java.io.Serializable;
 
