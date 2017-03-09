@@ -3,7 +3,7 @@ Nathan Hanak Coursework 3 Repo
 
 
 This repository contains Nathan Hanak's attempt at Coursework 3 for the PiJ class
-for the Birkbeck MSc Computer Science program.
+for the Birkbeck MSc Computer Science program. Contributing GitHub accounts are BBK-PiJ-2016-06 and NateHan, both of whom are the same person.
 
 The program "Contact Manager" contains a mock scheduling program intended for use by
 a small business. It contains Meetings past and present as well as contacts who attend said meetings.
