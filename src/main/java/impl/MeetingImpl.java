@@ -14,7 +14,6 @@ import java.util.Set;
  *
  * Meetings have unique IDs, scheduled date and a list of participating contacts
  */
-
 public class MeetingImpl implements Meeting, Serializable {
 
     private static int allMeetingIdCounter = 0;
@@ -23,37 +22,46 @@ public class MeetingImpl implements Meeting, Serializable {
     private Set<Contact> participants;
 
     /**
-     * Constructor for main.java.impl.MeetingImpl
+     * Constructor for MeetingImpl
      *
-     * @param contacts : a set of type main.java.spec.Contact for this meeting
-     * @param date : a calendar indicating the scheduled date of the meeting
+     * @param contacts : a set of type Contact for this meeting
+     * @param newDate : a calendar indicating the scheduled date of the meeting
      */
-    public MeetingImpl(Set<Contact> contacts, Calendar date) {
+    public MeetingImpl(Set<Contact> contacts, Calendar newDate) {
         allMeetingIdCounter++;
         meetingId = allMeetingIdCounter;
         participants = contacts;
-        this.date = date;
+        this.date = newDate;
     }
 
     @Override
-    public int getId() {
+    public final int getId() {
         return meetingId;
     }
 
     @Override
-    public Calendar getDate() {
+    public final Calendar getDate() {
         return date;
     }
 
     @Override
-    public Set<Contact> getContacts() {
+    public final Set<Contact> getContacts() {
         return participants;
     }
 
+    /**
+     * method used upon startup of application. newID is obtained from the saved file
+     * and the counter is set here to last known value for normal program operation.
+     * @param newId
+     */
     public static void setAllMeetingIdCounter(int newId) {
         allMeetingIdCounter = newId;
     }
 
+    /**
+     * Method used when saving application. Saves the last known meetingID for storage.
+     * @return int the value of the last ID given to a MeetingImpl object.
+     */
     public static int getAllMeetingIdCounter() {
         return allMeetingIdCounter;
     }

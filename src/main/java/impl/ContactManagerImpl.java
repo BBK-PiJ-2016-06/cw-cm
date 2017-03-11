@@ -17,7 +17,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
     private Set<Contact> allKnownContacts = new HashSet<>();
     private List<FutureMeeting> futureMeetingList = new ArrayList<>();
     private List<PastMeeting> pastMeetingList = new ArrayList<>();
-    private List<Integer> savedIdList = new ArrayList<>(Arrays.asList(0, 0)); // [0]= main.java.spec.Meeting, [1]= main.java.spec.Contact
+    private List<Integer> savedIdList = new ArrayList<>(Arrays.asList(0, 0)); // [0]= Meeting, [1]= Contact
     private String saveFileName = "ContactManagerFile.txt";
     private File file = new File(saveFileName);
 
@@ -57,8 +57,11 @@ public class ContactManagerImpl implements ContactManager, Serializable {
     private void createFileIfNecessary() {
         try {
             if (!file.exists()) {
-                file.createNewFile();
-                flush();
+                if(file.createNewFile()) {
+                    flush();
+                } else {
+                    throw new IOException("Not able to create file");
+                }
             }
         } catch (IOException ex) {
                 ex.printStackTrace();
@@ -74,12 +77,12 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         Calendar current = Calendar.getInstance();
         futureMeetingList.parallelStream()
                             .filter(m -> m.getDate().compareTo(current) < 0)
-                            .forEach(f -> addNewPastMeeting(f.getContacts(), f.getDate(), "main.java.spec.Meeting complete"));
+                            .forEach(f -> addNewPastMeeting(f.getContacts(), f.getDate(), "Meeting complete"));
         trimExpiredFutureMeetings(current);
     }
 
     /**
-     * Culls futureMeetingList of any main.java.spec.FutureMeeting objects with dates occurring in past
+     * Culls futureMeetingList of any FutureMeeting objects with dates occurring in past
      * @param current Calendar object reflecting exact local time method called
      */
     private void trimExpiredFutureMeetings(Calendar current) {
@@ -103,7 +106,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
     @Override
     public PastMeeting getPastMeeting (int id) throws IllegalStateException {
         if (returnMeetingById(futureMeetingList, id) != null ) {
-            throw new IllegalStateException( "ID belongs to a Future main.java.spec.Meeting");
+            throw new IllegalStateException( "ID belongs to a Future Meeting");
         }
         return returnMeetingById(pastMeetingList, id);
     }
@@ -111,7 +114,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
     @Override
     public FutureMeeting getFutureMeeting(int id) {
         if (returnMeetingById(pastMeetingList, id) != null ) {
-            throw new IllegalStateException( "ID belongs to a Past main.java.spec.Meeting");
+            throw new IllegalStateException( "ID belongs to a Past Meeting");
         }
         return returnMeetingById(futureMeetingList, id);
     }
@@ -143,6 +146,12 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         }
     }
 
+    /**
+     * Method which returns a list of Meetings occuring on the same calendar date.
+     * @param date a calendar to use as a search reference
+     * @param meetingList a list of Meetings to search through
+     * @return a List<Meeting> containig meetings which occur on the date passed in the param.
+     */
     private List<Meeting> getMeetingListOn(Calendar date, List<? extends Meeting> meetingList) {
         return meetingList.parallelStream()
                             .filter(m ->    (m.getDate().get(Calendar.YEAR) == date.get(Calendar.YEAR)) &&
@@ -159,7 +168,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
 
     @Override
     public int addNewPastMeeting (Set<Contact> contacts, Calendar date, String text) {
-        Objects.requireNonNull(contacts, "Null Set<main.java.spec.Contact>");
+        Objects.requireNonNull(contacts, "Null Set<Contact>");
         Objects.requireNonNull(date, "Null Calendar");
         Objects.requireNonNull(text, "Null String");
         contacts.parallelStream().forEach(contact -> contactIsKnown(contact));
@@ -177,7 +186,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
         Objects.requireNonNull(text, "Null String");
         PastMeeting retrievedPastMeeting = getPastMeeting(id);
         if (retrievedPastMeeting == null) {
-            throw new IllegalArgumentException("main.java.spec.Meeting does not exist");
+            throw new IllegalArgumentException("Meeting does not exist");
         }
         if ( retrievedPastMeeting instanceof PastMeetingImpl) {
             ((PastMeetingImpl) retrievedPastMeeting).addNotes(text);
@@ -280,7 +289,7 @@ public class ContactManagerImpl implements ContactManager, Serializable {
      * the identifying int
      * @param meetingList the List<T> of meetings to search through
      * @param id the identifying id of the meeting
-     * @param <T> The type of meeting (can be main.java.spec.FutureMeeting, main.java.spec.PastMeeting, etc)
+     * @param <T> The type of meeting (can beFutureMeeting, PastMeeting, etc)
      * @return a meeting of the specified requirements or a null meeting if there is no
      *          meeting within the list
      */
@@ -293,17 +302,17 @@ public class ContactManagerImpl implements ContactManager, Serializable {
 
     /**
      * Method which first checks if the contact is null, then
-     * returns a List<T extends main.java.spec.Meeting> containing all meetings with specified contact.
+     * returns a List<T extends Meeting> containing all meetings with specified contact.
      * @param meetingList a list of meetings to search.
      * @param contact a specified contact whose participating meetings we are searching for
-     * @param <? extends T> main.java.spec.Meeting. A List of a type that is an extension of main.java.spec.Meeting.
-     * @return List<T extends main.java.spec.Meeting> a list of all meetings in time frame containing contact
+     * @param <? extends T> Meeting. A List of a type that is an extension of Meeting.
+     * @return List<T extends Meeting> a list of all meetings in time frame containing contact
      * @throws IllegalArgumentException if the contact is not contained in allKnownContacts.
      * @throws NullPointerException if the contact is null
      */
     private <T extends Meeting> List<T> returnsMeetingListByContact(List<? extends T> meetingList, Contact contact)
             throws IllegalArgumentException, NullPointerException {
-        Objects.requireNonNull(contact, "Null main.java.spec.Contact");
+        Objects.requireNonNull(contact, "Null Contact");
         contactIsKnown(contact);
         return   meetingList.parallelStream()
                             .filter(m -> m.getContacts().contains(contact))

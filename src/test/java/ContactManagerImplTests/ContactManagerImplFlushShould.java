@@ -97,9 +97,9 @@ public class ContactManagerImplFlushShould {
         currentTimePlus5sec.add(Calendar.SECOND,  5);
         int futureMeetId = myContactManager.addFutureMeeting(contactSet, currentTimePlus5sec);
         try { // need to sleep to allow future meeting to become a past meeting
-            for (int i = 0; i < 5; i++) {
-                System.out.println("Sleeping..." + (5 - (i)));
-                Thread.sleep(1001);
+            for (int i = 0; i < 6; i++) {
+                System.out.println("Sleeping..." + (6 - (i)));
+                Thread.sleep(1000);
             }
         } catch (InterruptedException ex) {
             System.out.println("Was interrupted!");

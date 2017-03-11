@@ -18,10 +18,10 @@ public class ContactImpl implements Contact, Serializable {
     private String name;
     private String cumulativeNotes = "";
 
-    public ContactImpl(String name){
+    public ContactImpl(String newName){
         allContactIdCounter++;
         thisContactID = allContactIdCounter;
-        this.name = name;
+        this.name = newName;
     }
 
     /**
@@ -30,7 +30,7 @@ public class ContactImpl implements Contact, Serializable {
      * @return the ID of the contact.
      */
     @Override
-    public int getId(){
+    public final int getId(){
         return thisContactID;
     };
 
@@ -40,7 +40,7 @@ public class ContactImpl implements Contact, Serializable {
      * @return the name of the contact.
      */
     @Override
-    public String getName(){
+    public final String getName(){
         return name;
     }
 
@@ -53,7 +53,7 @@ public class ContactImpl implements Contact, Serializable {
      * @return a string with notes about the contact, maybe empty.
      */
     @Override
-    public String getNotes(){
+    public final String getNotes(){
         return cumulativeNotes;
     }
 
@@ -63,7 +63,7 @@ public class ContactImpl implements Contact, Serializable {
      * @param note the notes to be added
      */
     @Override
-    public void addNotes(String note){
+    public final void addNotes(String note){
         cumulativeNotes += note + "\n";
     };
 

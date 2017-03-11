@@ -12,18 +12,19 @@ import java.util.Set;
  */
 public class PastMeetingImpl extends MeetingImpl implements PastMeeting, Serializable {
 
-    public String notes = "";
+    private String notes = "";
 
     public PastMeetingImpl(Set<Contact> contacts, Calendar date) {
         super(contacts, date);
     }
 
-    public String getNotes() {
+    public final String getNotes() {
         return notes;
     }
 
-    public void addNotes(String newText) {
+    public final void addNotes(String newText) {
         notes += newText;
     }
+
 
 }
