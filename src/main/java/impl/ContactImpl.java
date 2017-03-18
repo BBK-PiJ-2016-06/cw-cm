@@ -1,85 +1,83 @@
 package impl;
 
+import java.io.Serializable;
 import spec.Contact;
 
-import java.io.Serializable;
 
 /**
- * A contact is a person we are making business with or may do in the future.
- *
- * Contacts have an ID (unique, a non-zero positive integer),
- * a name (not necessarily unique), and notes that the user
- * may want to save about them.
+ * Implementation of the Contact interface.
  */
 public class ContactImpl implements Contact, Serializable {
 
-    private static int allContactIdCounter = 0;
-    private int thisContactID;
-    private String name;
-    private String cumulativeNotes = "";
+  private static int allContactIdCounter = 0;
+  private int thisContactId;
+  private String name;
+  private String cumulativeNotes = "";
 
-    public ContactImpl(String newName){
-        allContactIdCounter++;
-        thisContactID = allContactIdCounter;
-        this.name = newName;
-    }
+  /**
+   * Constructor for ContactImpl.
+   * @param newName the name of the new contact.
+   */
+  public ContactImpl(String newName) {
+    allContactIdCounter++;
+    thisContactId = allContactIdCounter;
+    this.name = newName;
+  }
 
-    /**
-     * Returns the ID of the contact.
-     *
-     * @return the ID of the contact.
-     */
-    @Override
-    public final int getId(){
-        return thisContactID;
-    };
+  /**
+   * Returns the ID of the contact.
+   *
+   * @return the ID of the contact.
+   */
+  @Override
+  public final int getId() {
+    return thisContactId;
+  }
 
-    /**
-     * Returns the name of the contact.
-     *
-     * @return the name of the contact.
-     */
-    @Override
-    public final String getName(){
-        return name;
-    }
+  /**
+   * Returns the name of the contact.
+   *
+   * @return the name of the contact.
+   */
+  @Override
+  public final String getName() {
+    return name;
+  }
 
-    /**
-     * Returns our notes about the contact, if any.
-     *
-     * If we have not written anything about the contact, the empty
-     * string is returned.
-     *
-     * @return a string with notes about the contact, maybe empty.
-     */
-    @Override
-    public final String getNotes(){
-        return cumulativeNotes;
-    }
+  /**
+   * Returns our notes about the contact, if any.
+   * If we have not written anything about the contact, the empty
+   * string is returned.
+   * @return a string with notes about the contact, maybe empty.
+   */
+  @Override
+  public final String getNotes() {
+    return cumulativeNotes;
+  }
 
-    /**
-     * Add notes about the contact.
-     *
-     * @param note the notes to be added
-     */
-    @Override
-    public final void addNotes(String note){
-        cumulativeNotes += note + "\n";
-    };
+  /**
+   * Add notes about the contact.
+   *
+   * @param note the notes to be added
+   */
+  @Override
+  public final void addNotes(String note) {
+    cumulativeNotes += note + "\n";
+  }
 
-    /**
-     * getter for allContactIdCounter private field
-     * @return the current int value of allContactIdCounter
-     */
-    public static int getAllContactIdCounter() {
-        return allContactIdCounter;
-    }
+  /**
+   * getter for allContactIdCounter private field.
+   * @return the current int value of allContactIdCounter
+   */
+  public static int getAllContactIdCounter() {
+    return allContactIdCounter;
+  }
 
-    /**
-     * setter for allContactIdCounter private field
-     * @param newCount the new value of allContactIdCounter
-     */
-    public static void setAllContactIdCounter(int newCount) {
-        allContactIdCounter = newCount;
-    }
+  /**
+   * setter for allContactIdCounter private field.
+   * @param newCount the new value of allContactIdCounter
+   */
+  public static void setAllContactIdCounter(int newCount) {
+    allContactIdCounter = newCount;
+  }
 }

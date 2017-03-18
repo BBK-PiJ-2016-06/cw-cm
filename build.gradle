@@ -1,5 +1,25 @@
 apply plugin: 'java'
 
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = '7.6'
+    sourceSets = [sourceSets.main]
+    configFile = rootProject.file("config/checkstyle/checkstyle.xml");
+    showViolations = true
+    ignoreFailures = true
+}
+
+checkstyleTest {
+    enabled = false
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        html.destination rootProject.file("build/reports/checkstyle.html")
+    }
+}
+
 repositories {
     jcenter()
 }

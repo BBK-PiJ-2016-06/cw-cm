@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Testing class for main.java.impl.ContactImpl
+ * Testing class for ContactImpl
  */
 
 

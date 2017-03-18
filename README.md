@@ -19,3 +19,5 @@ convert them in to a past meeting.
 Due to the heavy reliance on Java collection classes, many methods were completed using Java 8 techniques.
 Since many of ContactManager's interface methods were very similar, several additional Private
 methods were created to uphold the DRY principle. 
+
+Project was set up in the "gradle" format. 
