@@ -1,5 +1,8 @@
 package contactmanagerimpltests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import impl.ContactManagerImpl;
 import impl.MeetingImpl;
 
@@ -17,9 +20,6 @@ import org.junit.Test;
 
 import spec.Contact;
 import spec.ContactManager;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Class to test features of the flush method for ContactManagerImpl class.

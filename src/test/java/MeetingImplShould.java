@@ -1,3 +1,5 @@
+import static org.junit.Assert.assertEquals;
+
 import impl.ContactImpl;
 import impl.MeetingImpl;
 
@@ -11,8 +13,6 @@ import org.junit.Test;
 
 import spec.Contact;
 import spec.Meeting;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by nathanhanak on 12/27/16.

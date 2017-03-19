@@ -1,5 +1,10 @@
 package contactmanagerimpltests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import impl.ContactImpl;
 import impl.ContactManagerImpl;
 import impl.FutureMeetingImpl;
@@ -23,11 +28,6 @@ import spec.ContactManager;
 import spec.FutureMeeting;
 import spec.Meeting;
 import spec.PastMeeting;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by nathanhanak on 12/28/16.
