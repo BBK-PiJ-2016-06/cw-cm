@@ -19,9 +19,16 @@ public class ContactImpl implements Contact, Serializable {
    * @param newName the name of the new contact.
    */
   public ContactImpl(String newName) {
-    allContactIdCounter++;
+    incrementContactIdCounter();
     thisContactId = allContactIdCounter;
     this.name = newName;
+  }
+
+  /**
+   * Upon creation of a new ContactImpl, static counter is incremented.
+   */
+  private void incrementContactIdCounter() {
+    allContactIdCounter++;
   }
 
   /**

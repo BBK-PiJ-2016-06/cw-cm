@@ -26,10 +26,17 @@ public class MeetingImpl implements Meeting, Serializable {
    * @param newDate : a Calendar indicating the scheduled date of the meeting.
    */
   public MeetingImpl(Set<Contact> contacts, Calendar newDate) {
-    allMeetingIdCounter++;
+    incrementMeetingIdCounter();
     meetingId = allMeetingIdCounter;
     participants = contacts;
     this.date = newDate;
+  }
+
+  /**
+   * Upon creation of a new MeetingImpl, static counter is incremented.
+   */
+  private void incrementMeetingIdCounter() {
+    allMeetingIdCounter++;
   }
 
   @Override
