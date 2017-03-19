@@ -11,7 +11,7 @@ checkstyle {
 }
 
 checkstyleTest {
-    enabled = false
+    enabled = true
 }
 
 tasks.withType(Checkstyle) {
