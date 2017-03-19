@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ContactManagerImplTests.ContactManagerImplFlushShould" tests="5" skipped="0" failures="0" errors="0" timestamp="2017-03-18T20:45:03" hostname="NathanHsMacBook.home" time="6.843">
+  <properties/>
+  <testcase name="returnSameUniqueContactsIDFromGetPastMeetingListAfterFlushing" classname="ContactManagerImplTests.ContactManagerImplFlushShould" time="0.382"/>
+  <testcase name="returnSameUniqueContactsFromGetFutureFutureMeetingListAfterFlushing" classname="ContactManagerImplTests.ContactManagerImplFlushShould" time="0.12"/>
+  <testcase name="returnAContactSetOfSameSizeWhenCreatingNewContactManagerImplFromOldContactManagerFlush" classname="ContactManagerImplTests.ContactManagerImplFlushShould" time="0.135"/>
+  <testcase name="storeLastMeetingIdAndReturnItWhenCallingNewConstructor" classname="ContactManagerImplTests.ContactManagerImplFlushShould" time="0.109"/>
+  <testcase name="returnNullWhenCallingGetFutureMeetingOfAnExpiredFutureMeetingAfterFlush" classname="ContactManagerImplTests.ContactManagerImplFlushShould" time="6.061"/>
+  <system-out><![CDATA[Sleeping...6
+Sleeping...5
+Sleeping...4
+Sleeping...3
+Sleeping...2
+Sleeping...1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

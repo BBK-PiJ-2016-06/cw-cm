@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ContactImplShould" tests="5" skipped="0" failures="0" errors="0" timestamp="2017-03-18T20:45:03" hostname="NathanHsMacBook.home" time="0.087">
+  <properties/>
+  <testcase name="returnMessageWhenCallingGetNotesAfterAddingNotes" classname="ContactImplShould" time="0.002"/>
+  <testcase name="returnBlankWhenCallingGetNotes" classname="ContactImplShould" time="0.029"/>
+  <testcase name="createAContactWithAnID1HigherThanParamOfSetMax" classname="ContactImplShould" time="0.0"/>
+  <testcase name="returnSteveAndMariahWhenCallingGetName" classname="ContactImplShould" time="0.0"/>
+  <testcase name="returnIdOneHigherThanIDCounterAfterCreatingNewContact" classname="ContactImplShould" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
