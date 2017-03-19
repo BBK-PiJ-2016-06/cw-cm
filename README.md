@@ -34,8 +34,13 @@ some programming concepts and to help clear through syntax errors preventing me 
 In the effort of maintaining academic honesty and attempting to avoid plagiarism - I am listing those questions below:
 
 http://stackoverflow.com/questions/41536667/tranversing-and-filtering-a-set-comparing-its-objects-getters-to-an-array-using
+
 http://stackoverflow.com/questions/41402956/using-lambda-and-foreach-to-find-an-object-in-a-set-and-triggering-a-boolean
+
 http://stackoverflow.com/questions/41420566/filter-loses-access-to-internal-objects-methods-when-passed-through-a-generic-p
+
 http://stackoverflow.com/questions/41499428/generic-parameter-returns-listchildinterface-in-stream-but-direct-method-call
+
 http://stackoverflow.com/questions/41517841/can-a-vararg-parameter-be-of-type-super-object
+
 http://stackoverflow.com/questions/41536667/tranversing-and-filtering-a-set-comparing-its-objects-getters-to-an-array-using
